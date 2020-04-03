@@ -49,7 +49,8 @@ cool app color --> #282c34
 
 TODO:
 
-install react router
 permission based routing
 setup navigation
 setup custom colors
+create handle error/handle success for axios
+decide how you want to handle loading states
