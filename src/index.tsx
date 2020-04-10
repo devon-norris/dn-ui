@@ -1,22 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import App from './App'
+import App from './pages'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import createStore from './store'
+import 'antd/dist/antd.css'
 
 const store = createStore()
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 )
 
