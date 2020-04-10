@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import createStore from './store'
-import 'antd/dist/antd.css'
 
 const store = createStore()
 
