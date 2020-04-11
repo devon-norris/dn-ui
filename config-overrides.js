@@ -1,4 +1,5 @@
 const { override, fixBabelImports, addLessLoader } = require('customize-cra')
+const colors = require('./src/colors')
 
 module.exports = override(
   fixBabelImports('import', {
@@ -9,7 +10,9 @@ module.exports = override(
   addLessLoader({
     javascriptEnabled: true,
     modifyVars: {
-      '@primary-color': '#1DA57A',
+      '@primary-color': colors.primary,
+      '@layout-header-background': colors.darkGray,
+      '@menu-dark-submenu-bg': colors.evenDarkerGray,
     },
   })
 )
