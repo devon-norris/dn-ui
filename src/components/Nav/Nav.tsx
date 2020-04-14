@@ -18,6 +18,8 @@ export interface NavProps {
   isMobile: boolean
   children?: any
   isAuthenticated: boolean
+  router: any
+  logout: Function
 }
 
 const menuIconStyle = {
@@ -27,10 +29,18 @@ const menuIconStyle = {
 }
 const navBackgroundColor = colors.darkGray
 
-const Nav = ({ isMobile, children, isAuthenticated }: NavProps) => {
+const Nav = ({ isMobile, children, isAuthenticated, router, logout }: NavProps) => {
   const [collapsed, setCollapsed] = useState(true)
 
   const handleMenuFold = (): void => setCollapsed(!collapsed)
+  const handleOnSelect = ({ key }) => {
+    if (key === '/logout') {
+      logout()
+      return router.history.push('/')
+    }
+    return router.history.push(key)
+  }
+
   const MenuIcon = () =>
     collapsed ? (
       <MenuUnfoldOutlined style={menuIconStyle} onClick={handleMenuFold} />
@@ -76,8 +86,8 @@ const Nav = ({ isMobile, children, isAuthenticated }: NavProps) => {
               theme='dark'
               mode='inline'
               style={{ backgroundColor: navBackgroundColor }}
-              onSelect={select => console.log('select:', select)}
-              selectedKeys={['/']}
+              onSelect={handleOnSelect}
+              selectedKeys={[router.location.pathname]}
             >
               <Menu.Item key='/'>
                 <HomeOutlined />
@@ -85,7 +95,6 @@ const Nav = ({ isMobile, children, isAuthenticated }: NavProps) => {
               </Menu.Item>
               {isAuthenticated ? (
                 <SubMenu
-                  key='sub1'
                   title={
                     <span>
                       <UserOutlined />
@@ -93,19 +102,19 @@ const Nav = ({ isMobile, children, isAuthenticated }: NavProps) => {
                     </span>
                   } // TODO: REPLACE
                 >
-                  <Menu.Item key='1'>
+                  <Menu.Item key='/logout'>
                     <LogoutOutlined />
                     Logout
                   </Menu.Item>
                 </SubMenu>
               ) : (
-                <Menu.Item>
+                <Menu.Item key='/login'>
                   <LoginOutlined />
                   Login
                 </Menu.Item>
               )}
               {isAuthenticated && (
-                <Menu.Item key='1'>
+                <Menu.Item key='/logout'>
                   <LogoutOutlined />
                   <span>Logout</span>
                 </Menu.Item>
@@ -124,6 +133,8 @@ const Nav = ({ isMobile, children, isAuthenticated }: NavProps) => {
 const defaultProps: NavProps = {
   isMobile: true,
   isAuthenticated: false,
+  router: {},
+  logout: () => {},
 }
 
 Nav.defaultProps = defaultProps

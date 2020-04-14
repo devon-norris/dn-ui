@@ -8,6 +8,7 @@ import { authenticate } from '../store/auth'
 import config from '../config'
 import Home from './Home'
 import Login from './Login'
+import NotFound from './NotFound'
 
 const {
   media,
@@ -41,6 +42,9 @@ const Routes = ({ history, location, match }) => {
           </Route>
           <Route exact path='/login'>
             {isAuthenticated ? <Redirect to='/' /> : <Login />}
+          </Route>
+          <Route>
+            <NotFound />
           </Route>
         </Switch>
       </div>

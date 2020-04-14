@@ -25,7 +25,7 @@ const Login = ({ login, viewState: { loading } }: LoginProps) => {
   ]
 
   return (
-    <div style={{ width: '350px', margin: 'auto', marginTop: '20%' }}>
+    <div style={{ width: '350px', margin: 'auto', marginTop: '15%' }}>
       <Form form={form} data={formData} />
       <Button type='primary' width='100%' onClick={() => handleFormSubmit(form, login)} loading={loading}>
         Login
