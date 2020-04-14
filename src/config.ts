@@ -12,6 +12,10 @@ interface Config {
     siderHeight: number
     menuIconPadding: number
   }
+  component: {
+    width: string
+    widthMobile: string
+  }
 }
 
 const config: Config = {
@@ -25,6 +29,10 @@ const config: Config = {
     siderOffset: 4,
     siderHeight: 105,
     menuIconPadding: 24,
+  },
+  component: {
+    width: '350px',
+    widthMobile: '90%',
   },
 }
 

@@ -3,6 +3,7 @@ import { Card as AntdCard } from 'antd'
 import colors from '../colors'
 import config from '../config'
 import { useMediaQuery } from 'react-responsive'
+import getComponentWidth from '../utils/getComponentWidth'
 
 const Card = props => {
   const isMobile = useMediaQuery({ query: config.media.mobile })
@@ -11,7 +12,7 @@ const Card = props => {
     margin: 'auto',
     marginTop: '10%',
     borderRadius: '5px',
-    width: isMobile ? '90%' : '350px',
+    width: getComponentWidth(isMobile),
   }
 
   if (cardType === 'table') {

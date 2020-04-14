@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { login } from '../../store/auth'
 import { getViewState, viewKeys } from '../../store/viewState'
 
-const mapStateToProps = state => ({ viewState: getViewState(viewKeys.login, state) })
+const mapStateToProps = (state, { isMobile }) => ({ viewState: getViewState(viewKeys.login, state), isMobile })
 
 const mapDispatchToProps = { login }
 

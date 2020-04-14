@@ -44,10 +44,10 @@ const Routes = ({ history, location, match }) => {
             <Home />
           </Route>
           <Route exact path='/login'>
-            {isAuthenticated ? <Redirect to='/' /> : <Login />}
+            {isAuthenticated ? <Redirect to='/' /> : <Login {...props} />}
           </Route>
           <Route exact path='/signup'>
-            {isAuthenticated ? <Redirect to='/' /> : <Signup />}
+            {isAuthenticated ? <Redirect to='/' /> : <Signup {...props} />}
           </Route>
           <Route>
             <NotFound />
