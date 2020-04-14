@@ -1,7 +1,7 @@
 import React from 'react'
 import { Result } from 'antd'
 import { Button } from '../lib'
-import { Link } from 'react-router-dom'
+import { Link } from '../lib'
 
 const NotFound = () => (
   <Result

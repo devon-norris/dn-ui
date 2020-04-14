@@ -1,9 +1,8 @@
 import React from 'react'
 import { FormData, useForm, handleFormSubmit } from '../../lib/Form'
-import { Form, Button } from '../../lib'
+import { Form, Button, Link } from '../../lib'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { ViewState, defaultViewState } from '../../store/viewState'
-import { Link } from 'react-router-dom'
 import { Form as AntdForm } from 'antd'
 
 interface LoginProps {
@@ -31,10 +30,10 @@ const Login = ({ login, viewState: { loading } }: LoginProps) => {
         Login
       </Button>
       <AntdForm.Item style={{ marginTop: '10px' }}>
-        <Link to='#' style={{ float: 'left', color: '#09f' }}>
+        <Link to='#' style={{ float: 'left' }}>
           Forgot Password?
         </Link>
-        <Link to='#' style={{ float: 'right', color: '#09f' }}>
+        <Link to='/signup' style={{ float: 'right' }}>
           Register Now
         </Link>
       </AntdForm.Item>

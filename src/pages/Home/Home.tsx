@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from '../../lib'
+import { Button, Link } from '../../lib'
 
 interface HomeProps {
   isAuthenticated: boolean

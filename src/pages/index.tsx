@@ -6,9 +6,12 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { useSelector, useDispatch, RootStateOrAny } from 'react-redux'
 import { authenticate } from '../store/auth'
 import config from '../config'
+
+// Import pages
 import Home from './Home'
 import Login from './Login'
 import NotFound from './NotFound'
+import Signup from './Signup'
 
 const {
   media,
@@ -42,6 +45,9 @@ const Routes = ({ history, location, match }) => {
           </Route>
           <Route exact path='/login'>
             {isAuthenticated ? <Redirect to='/' /> : <Login />}
+          </Route>
+          <Route exact path='/signup'>
+            {isAuthenticated ? <Redirect to='/' /> : <Signup />}
           </Route>
           <Route>
             <NotFound />
