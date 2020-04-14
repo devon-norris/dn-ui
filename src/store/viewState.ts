@@ -5,7 +5,7 @@ export const viewKeys = {
   login: 'login',
 }
 
-interface ViewState {
+export interface ViewState {
   ui: boolean
   loading: boolean
   feedbackType: string
@@ -26,7 +26,7 @@ export const feedBackTypes = {
   error: 'error',
 }
 
-const defaultViewState: ViewState = {
+export const defaultViewState: ViewState = {
   ui: false,
   loading: false,
   feedbackType: '',

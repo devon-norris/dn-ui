@@ -1,6 +1,13 @@
 import React, { useState, Fragment } from 'react'
 import { Layout, Menu } from 'antd'
-import { HomeOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  HomeOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons'
 import config from '../../config'
 import colors from '../../colors'
 const { headerHeight, siderHeight, siderOffset, menuIconPadding } = config.nav
@@ -10,6 +17,7 @@ const { SubMenu } = Menu
 export interface NavProps {
   isMobile: boolean
   children?: any
+  isAuthenticated: boolean
 }
 
 const menuIconStyle = {
@@ -19,7 +27,7 @@ const menuIconStyle = {
 }
 const navBackgroundColor = colors.darkGray
 
-const Nav = ({ isMobile, children }: NavProps) => {
+const Nav = ({ isMobile, children, isAuthenticated }: NavProps) => {
   const [collapsed, setCollapsed] = useState(true)
 
   const handleMenuFold = (): void => setCollapsed(!collapsed)
@@ -29,6 +37,9 @@ const Nav = ({ isMobile, children }: NavProps) => {
     ) : (
       <MenuFoldOutlined style={menuIconStyle} onClick={handleMenuFold} />
     )
+
+  const childrenLayout = <Layout style={{ height: '100vh' }}>{children}</Layout>
+  const showSider = isMobile || isAuthenticated
 
   return (
     <Fragment>
@@ -47,53 +58,74 @@ const Nav = ({ isMobile, children }: NavProps) => {
           <MenuIcon />
         </Header>
       )}
-      <Layout>
-        <Sider
-          trigger={null}
-          collapsible
-          collapsed={collapsed}
-          collapsedWidth={isMobile ? 0 : 80}
-          style={{
-            height: `${siderHeight}vh`,
-            backgroundColor: navBackgroundColor,
-            marginTop: isMobile ? `${headerHeight - siderOffset}px` : `-${siderOffset}px`,
-          }}
-        >
-          {!isMobile && <MenuIcon />}
-          <Menu
-            theme='dark'
-            mode='inline'
-            style={{ backgroundColor: navBackgroundColor }}
-            onSelect={select => console.log('select:', select)}
-            selectedKeys={['/']}
+      {showSider ? (
+        <Layout>
+          <Sider
+            trigger={null}
+            collapsible
+            collapsed={collapsed}
+            collapsedWidth={isMobile ? 0 : 80}
+            style={{
+              height: `${siderHeight}vh`,
+              backgroundColor: navBackgroundColor,
+              marginTop: isMobile ? `${headerHeight - siderOffset}px` : `-${siderOffset}px`,
+            }}
           >
-            <Menu.Item key='/'>
-              <HomeOutlined />
-              <span>Home</span>
-            </Menu.Item>
-            <SubMenu
-              key='sub1'
-              title={
-                <span>
-                  <UserOutlined />
-                  <span>User</span>
-                </span>
-              } // TODO: REPLACE
+            {!isMobile && <MenuIcon />}
+            <Menu
+              theme='dark'
+              mode='inline'
+              style={{ backgroundColor: navBackgroundColor }}
+              onSelect={select => console.log('select:', select)}
+              selectedKeys={['/']}
             >
-              <Menu.Item key='3'>Tom</Menu.Item>
-              <Menu.Item key='4'>Bill</Menu.Item>
-              <Menu.Item key='5'>Alex</Menu.Item>
-            </SubMenu>
-          </Menu>
-        </Sider>
-        <Layout>{children}</Layout>
-      </Layout>
+              <Menu.Item key='/'>
+                <HomeOutlined />
+                <span>Home</span>
+              </Menu.Item>
+              {isAuthenticated ? (
+                <SubMenu
+                  key='sub1'
+                  title={
+                    <span>
+                      <UserOutlined />
+                      <span>User</span>
+                    </span>
+                  } // TODO: REPLACE
+                >
+                  <Menu.Item key='1'>
+                    <LogoutOutlined />
+                    Logout
+                  </Menu.Item>
+                </SubMenu>
+              ) : (
+                <Menu.Item>
+                  <LoginOutlined />
+                  Login
+                </Menu.Item>
+              )}
+              {isAuthenticated && (
+                <Menu.Item key='1'>
+                  <LogoutOutlined />
+                  <span>Logout</span>
+                </Menu.Item>
+              )}
+            </Menu>
+          </Sider>
+          {childrenLayout}
+        </Layout>
+      ) : (
+        childrenLayout
+      )}
     </Fragment>
   )
 }
 
-Nav.defaultProps = {
+const defaultProps: NavProps = {
   isMobile: true,
+  isAuthenticated: false,
 }
+
+Nav.defaultProps = defaultProps
 
 export default Nav

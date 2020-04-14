@@ -1,8 +1,9 @@
 import { connect } from 'react-redux'
 import Nav from './Nav'
 
-const mapStateToProps = (state, { isMobile }) => ({
+const mapStateToProps = ({ auth: { isAuthenticated } }, { isMobile }) => ({
   isMobile,
+  isAuthenticated,
 })
 
 export default connect(mapStateToProps)(Nav)
