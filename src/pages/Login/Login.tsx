@@ -35,7 +35,7 @@ const Login = ({ login, viewState: { loading } }: LoginProps) => {
           Forgot Password?
         </Link>
         <Link to='#' style={{ float: 'right', color: '#09f' }}>
-          Register now
+          Register Now
         </Link>
       </AntdForm.Item>
     </div>

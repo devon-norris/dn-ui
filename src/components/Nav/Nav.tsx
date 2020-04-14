@@ -48,7 +48,7 @@ const Nav = ({ isMobile, children, isAuthenticated, router, logout }: NavProps) 
       <MenuFoldOutlined style={menuIconStyle} onClick={handleMenuFold} />
     )
 
-  const childrenLayout = <Layout style={{ height: '100vh' }}>{children}</Layout>
+  const childrenLayout = <Layout style={{ height: '100vh', fontSize: '16px' }}>{children}</Layout>
   const showSider = isMobile || isAuthenticated
 
   return (

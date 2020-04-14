@@ -13,6 +13,7 @@ module.exports = override(
       '@primary-color': colors.primary,
       '@layout-header-background': colors.darkGray,
       '@menu-dark-submenu-bg': colors.evenDarkerGray,
+      '@font-size-base': '16px',
     },
   })
 )
