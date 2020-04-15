@@ -3,6 +3,8 @@ import _get from 'lodash/get'
 
 export const viewKeys = {
   login: 'login',
+  getOrgs: 'getOrgs',
+  createUser: 'createUser',
 }
 
 export interface ViewState {

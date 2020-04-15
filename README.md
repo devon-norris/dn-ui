@@ -49,5 +49,6 @@ cool app color --> #282c34
 
 TODO:
 
+create user validation
+password popover
 permission based routing
-setup nave to be clickable links

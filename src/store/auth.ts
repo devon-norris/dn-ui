@@ -53,6 +53,18 @@ export const authenticate = () => async dispatch => {
   } catch {}
 }
 
+export const createNewUser = ({ fName, lName, email, password, orgId, role = 'user' }) => async dispatch => {
+  try {
+    dispatch(setViewState(viewKeys.createUser, { loading: true }))
+    await axios.post('/users', { fName, lName, email, password, orgId, role })
+    // TODO: Figure out notifications?
+    dispatch(setViewState(viewKeys.createUser, { loading: false, ui: true }))
+  } catch (err) {
+    console.error('Error creating user', err)
+    dispatch(setViewState(viewKeys.createUser, { loading: false }))
+  }
+}
+
 const initialState: AuthState = {
   isAuthenticated: false,
   user: {

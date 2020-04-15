@@ -1,20 +1,54 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { Form as AntdForm, Select } from 'antd'
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Row, Form, Input, Card, Link, Button } from '../../lib'
+import { handleFormSubmit } from '../../lib/Form'
 import getComponentWidth from '../../utils/getComponentWidth'
 const { Item } = AntdForm
 
+// TODO: replace
+const mockCreateNewUser = vals => console.log('user created!', vals)
+
 interface SignupProps {
   isMobile: boolean
+  router: any
+  organizations: any[]
+  orgsLoading: boolean
+  buttonLoading: boolean
+  createUserSuccess: boolean
+  createNewUser: Function
+  resetCreateUserViewState: Function
+  getOrganizations: Function
 }
 
-const Signup = ({ isMobile }) => {
+const Signup = ({
+  isMobile,
+  router,
+  organizations,
+  orgsLoading,
+  buttonLoading,
+  createUserSuccess,
+  createNewUser,
+  resetCreateUserViewState,
+  getOrganizations,
+}: SignupProps) => {
+  useEffect(() => {
+    getOrganizations()
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
+    if (createUserSuccess) {
+      // TODO: Figure out notifications?
+      resetCreateUserViewState()
+      router.history.push('/login')
+    }
+    // eslint-disable-next-line
+  }, [createUserSuccess])
+
   const [form] = AntdForm.useForm()
   const width = getComponentWidth(isMobile)
   const [errors, setErrors] = useState({})
-  // TODO: Replace
-  const orgs = ['SouthEnd', 'Test Org', 'ACME INC.']
 
   return (
     <Fragment>
@@ -58,18 +92,29 @@ const Signup = ({ isMobile }) => {
                 inputType='password'
               />
             </Item>
-            <Item name='organization' rules={[{ message: 'Select an organization', required: true }]} hasFeedback>
-              <Select showSearch placeholder='Select your organization' style={{ borderRadius: '3px' }}>
-                {orgs.map(org => {
+            <Item name='orgId' rules={[{ message: 'Select an organization', required: true }]} hasFeedback>
+              <Select
+                showSearch
+                placeholder='Select your organization'
+                style={{ borderRadius: '3px' }}
+                loading={orgsLoading}
+                disabled={orgsLoading}
+              >
+                {organizations.map(({ name, _id }) => {
                   return (
-                    <Select.Option key={org} value={org}>
-                      {org}
+                    <Select.Option key={_id} value={_id}>
+                      {name}
                     </Select.Option>
                   )
                 })}
               </Select>
             </Item>
-            <Button type='primary' style={{ width: '100%' }}>
+            <Button
+              type='primary'
+              style={{ width: '100%' }}
+              onClick={() => handleFormSubmit(form, mockCreateNewUser)}
+              loading={buttonLoading}
+            >
               Register
             </Button>
           </Form>
@@ -91,6 +136,14 @@ const Signup = ({ isMobile }) => {
 
 const defaultProps: SignupProps = {
   isMobile: true,
+  router: {},
+  organizations: [],
+  orgsLoading: false,
+  buttonLoading: false,
+  createUserSuccess: false,
+  createNewUser: () => console.log('Mock create new user'),
+  getOrganizations: () => console.log('Mock get organizations'),
+  resetCreateUserViewState: () => console.log('Mock reset create user view state'),
 }
 
 Signup.defaultProps = defaultProps
