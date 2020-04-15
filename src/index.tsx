@@ -6,8 +6,10 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import createStore from './store'
+import errorLogger from './utils/errorLogger'
 
 const store = createStore()
+console.error = errorLogger
 
 ReactDOM.render(
   <Provider store={store}>

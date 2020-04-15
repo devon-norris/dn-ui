@@ -4,10 +4,10 @@ import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Row, Form, Input, Card, Link, Button } from '../../lib'
 import { handleFormSubmit } from '../../lib/Form'
 import getComponentWidth from '../../utils/getComponentWidth'
+import pwValidator, { defaultPasswordValidationState } from '../../utils/passwordValidator'
+import PasswordPopover from '../../components/PasswordPopover'
+import { FormPopover } from '../../lib'
 const { Item } = AntdForm
-
-// TODO: replace
-const mockCreateNewUser = vals => console.log('user created!', vals)
 
 interface SignupProps {
   isMobile: boolean
@@ -49,6 +49,18 @@ const Signup = ({
   const [form] = AntdForm.useForm()
   const width = getComponentWidth(isMobile)
   const [errors, setErrors] = useState({})
+  const [pwInfo, setPwInfo] = useState(defaultPasswordValidationState)
+
+  const passwordValidator = async (_, value): Promise<void> => {
+    const pwInfo = pwValidator(value)
+    setPwInfo(pwInfo)
+    if (!pwInfo.isValid) throw new Error('Passwords do not match')
+  }
+
+  const passwordRepeatValidator = async (_, value): Promise<void> => {
+    const passwordValue = form.getFieldValue('password')
+    if (value !== passwordValue || !pwInfo.isValid) throw new Error('Passwords do not match')
+  }
 
   return (
     <Fragment>
@@ -76,15 +88,25 @@ const Signup = ({
             >
               <Input placeholder='Email' prefix={MailOutlined} fieldError={errors['email']} />
             </Item>
-            <Item name='password' rules={[{ message: 'Enter a valid password', required: true }]} hasFeedback>
-              <Input
-                placeholder='Enter password'
-                prefix={LockOutlined}
-                fieldError={errors['password']}
-                inputType='password'
-              />
+            <Item
+              name='password'
+              rules={[{ message: 'Enter a valid password', required: true, validator: passwordValidator }]}
+              hasFeedback
+            >
+              <FormPopover content={<PasswordPopover pwInfo={pwInfo} />}>
+                <Input
+                  placeholder='Enter password'
+                  prefix={LockOutlined}
+                  fieldError={errors['password']}
+                  inputType='password'
+                />
+              </FormPopover>
             </Item>
-            <Item name='passwordRepeat' rules={[{ message: 'Passwords must match', required: true }]} hasFeedback>
+            <Item
+              name='passwordRepeat'
+              rules={[{ message: 'Passwords must match', required: true, validator: passwordRepeatValidator }]}
+              hasFeedback
+            >
               <Input
                 placeholder='Enter password again'
                 prefix={LockOutlined}
@@ -112,7 +134,7 @@ const Signup = ({
             <Button
               type='primary'
               style={{ width: '100%' }}
-              onClick={() => handleFormSubmit(form, mockCreateNewUser)}
+              onClick={() => handleFormSubmit(form, createNewUser)}
               loading={buttonLoading}
             >
               Register
