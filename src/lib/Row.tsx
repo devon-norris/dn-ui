@@ -5,7 +5,7 @@ const Row = props => {
   const rowProps = {
     align: 'middle',
     ...props,
-    style: { minHeight: '100vh', ...props.style },
+    style: { minHeight: props.vh ? `${props.vh}vh` : '0', ...props.style },
   }
   return <AntdRow {...rowProps}>{props.children}</AntdRow>
 }

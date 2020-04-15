@@ -1,5 +1,7 @@
 export { default as Button } from './Button'
 export { default as Card } from './Card'
-export { default as Form } from './Form'
+export { default as SimpleForm } from './SimpleForm'
 export { default as Link } from './Link'
 export { default as Row } from './Row'
+export { default as Form } from './Form'
+export { default as Input } from './Input'

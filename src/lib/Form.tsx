@@ -1,96 +1,44 @@
-import React, { useMemo, useState } from 'react'
-import { Form as AntdForm, Input as AntdInput } from 'antd'
-import _capitalize from 'lodash/capitalize'
-const { Item } = AntdForm
-
-export interface FormData {
-  name: string
-  label?: string
-  placeHolder?: string
-  inputType?: string
-  autoComplete?: string
-  initialValue?: string
-  required?: boolean
-  message?: string
-  Prefix: any
-}
+import React, { useState } from 'react'
+import { Form as AntdForm } from 'antd'
+import _isEmpty from 'lodash/isEmpty'
+import _get from 'lodash/get'
+import trimObjectValues from '../utils/trimObjectValues'
 
 export const useForm = AntdForm.useForm
 
 export const handleFormSubmit = async (form: any, action: Function): Promise<void> =>
   form
     .validateFields()
-    .then(values => action(values))
+    .then(values => action(trimObjectValues(values)))
     .catch(() => {})
 
-interface ItemProps {
-  name: string
-  rules: any
-  label?: string
-}
+const Form = ({ fieldErrors, ...props }: any) => {
+  const [errors, setErrors] = useState({})
 
-interface InputProps {
-  placeholder: string
-  prefix?: any
-  autoComplete: string
-}
-
-const getInput = (type: string) => {
-  switch (type) {
-    case 'password':
-      return AntdInput.Password
-    default:
-      return AntdInput
+  const handleFieldsChanged = (changedFields, allFields) => {
+    const field = changedFields[0]
+    if (!field) return props.onFieldsChange(changedFields, allFields)
+    const name = _get(field, 'name[0]')
+    if (!name) return props.onFieldsChange(changedFields, allFields)
+    const newErrors = {
+      ...errors,
+      [name]: !_isEmpty(field.errors),
+    }
+    setErrors(newErrors)
+    fieldErrors(newErrors)
+    return props.onFieldsChange(changedFields, allFields)
   }
-}
-
-const Form = ({ data, form }) => {
-  const [initialValues, setInitialValues] = useState({})
-  useMemo(() => {
-    data.forEach(({ name, initialValue }) => {
-      if (initialValue) {
-        setInitialValues({ ...initialValues, [name]: initialValue })
-      }
-    })
-    // eslint-disable-next-line
-  }, [data])
 
   return (
-    <AntdForm name='form' initialValues={initialValues} form={form}>
-      {data.map(
-        ({
-          name,
-          required = true,
-          message = `Please input ${name}`,
-          label,
-          inputType = '',
-          placeHolder = _capitalize(name),
-          Prefix,
-          autoComplete = 'on',
-        }: FormData) => {
-          const itemProps: ItemProps = {
-            name,
-            rules: [{ required, message }],
-          }
-          if (label) itemProps.label = label
-
-          const inputProps: InputProps = {
-            placeholder: placeHolder,
-            autoComplete,
-          }
-          if (Prefix) inputProps.prefix = <Prefix />
-
-          const Input = getInput(inputType)
-
-          return (
-            <Item key={name} {...itemProps}>
-              <Input {...inputProps} />
-            </Item>
-          )
-        }
-      )}
+    <AntdForm {...props} onFieldsChange={handleFieldsChanged}>
+      {props.children}
     </AntdForm>
   )
+}
+
+Form.defaultProps = {
+  onFieldsChange: () => {},
+  fieldErrors: () => {},
 }
 
 export default Form

@@ -1,13 +1,10 @@
 import React from 'react'
 import { Card as AntdCard } from 'antd'
 import colors from '../colors'
-import config from '../config'
-import { useMediaQuery } from 'react-responsive'
 import getComponentWidth from '../utils/getComponentWidth'
 
-const Card = props => {
-  const isMobile = useMediaQuery({ query: config.media.mobile })
-  const { cardType, style, headStyle, children } = props
+const Card = ({ cardType, isMobile, ...props }: any) => {
+  const { style, headStyle, children } = props
   let cardStyle = {
     margin: 'auto',
     marginTop: '10%',

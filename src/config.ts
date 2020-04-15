@@ -31,7 +31,7 @@ const config: Config = {
     menuIconPadding: 24,
   },
   component: {
-    width: '350px',
+    width: '375px',
     widthMobile: '90%',
   },
 }
