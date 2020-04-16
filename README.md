@@ -51,4 +51,5 @@ TODO:
 
 add get users route
 add users table
-integrate routePermissions into Nav
+create lib table
+create lib modal

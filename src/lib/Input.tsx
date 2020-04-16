@@ -29,6 +29,8 @@ const Input = ({ fieldError, inputType, ...props }: any) => {
   switch (inputType) {
     case 'password':
       return <AntdInput.Password {...inputProps} />
+    case 'search':
+      return <AntdInput.Search {...inputProps} />
     default:
       return <AntdInput {...inputProps} />
   }

@@ -12,10 +12,6 @@ const Card = ({ cardType, isMobile, ...props }: any) => {
     width: getComponentWidth(isMobile),
   }
 
-  if (cardType === 'table') {
-    cardStyle = { ...style, borderRadius: '10px', boxShadow: '0 0 5px 0' }
-  }
-
   return (
     <AntdCard
       {...props}
