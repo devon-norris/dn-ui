@@ -1,19 +1,13 @@
 import React, { useState, Fragment } from 'react'
 import { Layout, Menu } from 'antd'
-import {
-  HomeOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-  SettingOutlined,
-} from '@ant-design/icons'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import config from '../../config'
 import colors from '../../colors'
+import navRoutes from './navRoutes'
+import NavItem, { NavItemProps } from './NavItem'
+import NavSubMenu from './NavSubMenu'
 const { headerHeight, siderHeight, siderOffset, menuIconPadding } = config.nav
 const { Header, Sider } = Layout
-const { SubMenu, Item } = Menu
 
 export interface NavProps {
   isMobile: boolean
@@ -22,6 +16,7 @@ export interface NavProps {
   router: any
   logout: Function
   userName: string
+  userPermissions: string[]
 }
 
 const menuIconStyle = {
@@ -31,7 +26,7 @@ const menuIconStyle = {
 }
 const navBackgroundColor = colors.darkGray
 
-const Nav = ({ isMobile, children, isAuthenticated, router, logout, userName }: NavProps) => {
+const Nav = ({ isMobile, children, isAuthenticated, router, logout, userName, userPermissions }: NavProps) => {
   const [collapsed, setCollapsed] = useState(true)
 
   const handleMenuFold = (): void => setCollapsed(!collapsed)
@@ -52,6 +47,9 @@ const Nav = ({ isMobile, children, isAuthenticated, router, logout, userName }: 
 
   const childrenLayout = <Layout style={{ height: '100vh', fontSize: '16px' }}>{children}</Layout>
   const showSider = isMobile || isAuthenticated
+  const customNames = {
+    userName,
+  }
 
   return (
     <Fragment>
@@ -91,36 +89,21 @@ const Nav = ({ isMobile, children, isAuthenticated, router, logout, userName }: 
               onSelect={handleOnSelect}
               selectedKeys={[router.location.pathname]}
             >
-              <Item key='/'>
-                <HomeOutlined />
-                <span>Home</span>
-              </Item>
-              {isAuthenticated ? (
-                <SubMenu
-                  title={
-                    <span>
-                      <UserOutlined />
-                      <span>{userName}</span>
-                    </span>
-                  }
-                >
-                  <Item key='/userSettings'>
-                    <SettingOutlined />
-                    <span>Settings</span>
-                  </Item>
-                </SubMenu>
-              ) : (
-                <Item key='/login'>
-                  <LoginOutlined />
-                  <span>Login</span>
-                </Item>
-              )}
-              {isAuthenticated && (
-                <Item key='/logout'>
-                  <LogoutOutlined />
-                  <span>Logout</span>
-                </Item>
-              )}
+              {navRoutes.map(({ key, name, icon, permissions, isSubMenu, authRequired, noAuthRequired, subRoutes }) => {
+                const itemProps: NavItemProps = {
+                  name: customNames[name] || name,
+                  key,
+                  routeKey: key,
+                  icon,
+                  isAuthenticated,
+                  authRequired,
+                  noAuthRequired,
+                  userPermissions,
+                  permissions,
+                  subRoutes,
+                }
+                return isSubMenu ? <NavSubMenu {...itemProps} /> : <NavItem {...itemProps} />
+              })}
             </Menu>
           </Sider>
           {childrenLayout}
@@ -138,6 +121,7 @@ const defaultProps: NavProps = {
   router: {},
   logout: () => {},
   userName: '',
+  userPermissions: [],
 }
 
 Nav.defaultProps = defaultProps

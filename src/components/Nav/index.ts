@@ -7,6 +7,7 @@ const mapStateToProps = ({ auth: { isAuthenticated, user } }, { isMobile, router
   isAuthenticated,
   router,
   userName: user.fName,
+  userPermissions: user.permissions,
 })
 
 const mapDispatchToProps = { logout }

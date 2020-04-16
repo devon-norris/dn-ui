@@ -13,7 +13,7 @@ const handleArrayPermission = (userPermissions: string[], permission: string[]):
 }
 
 export default (state: any, permission: any): boolean => {
-  const userPermissions = _get(state, 'auth.user.permissions', [])
+  const userPermissions = _isArray(state) ? state : _get(state, 'auth.user.permissions', [])
   const permissionIsString = typeof permission === 'string'
   const permissionIsArray = _isArray(permission)
   if (permissionIsString) return handleStringPermission(userPermissions, permission)
