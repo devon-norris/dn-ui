@@ -10,8 +10,10 @@ import {
   ToolOutlined,
   UnlockOutlined,
   GlobalOutlined,
+  TeamOutlined,
+  ApiOutlined,
 } from '@ant-design/icons'
-const { home, userSettings, manageOrganizations, managePermissions, login, logout } = routes
+const { home, userSettings, manageUsers, manageOrganizations, managePermissions, login, logout, manageApi } = routes
 
 interface NavRoute {
   key: string
@@ -95,7 +97,21 @@ const navRoutes: NavRoute[] = [
         icon: UnlockOutlined,
         permissions: routePermissions[managePermissions],
       },
+      {
+        ...defaults,
+        key: manageApi,
+        name: 'API',
+        icon: ApiOutlined,
+        permissions: routePermissions[manageApi],
+      },
     ],
+  },
+  {
+    ...defaults,
+    key: manageUsers,
+    name: 'Users',
+    icon: TeamOutlined,
+    permissions: routePermissions[manageUsers],
   },
   {
     ...defaults,

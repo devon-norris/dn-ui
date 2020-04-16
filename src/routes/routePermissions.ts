@@ -1,7 +1,17 @@
 import routes from './routes'
 import permissions from './permissions'
 import navSubMenus from '../components/Nav/navSubMenus'
-const { home, login, logout, signup, userSettings, manageUsers, manageOrganizations, managePermissions } = routes
+const {
+  home,
+  login,
+  logout,
+  signup,
+  userSettings,
+  manageUsers,
+  manageOrganizations,
+  managePermissions,
+  manageApi,
+} = routes
 const { PUBLIC, users_u, users_d, organizations_d, permissions_r } = permissions
 
 export const navSubMenuRoutePermissions = {
@@ -18,4 +28,5 @@ export default {
   [manageUsers]: [users_d],
   [manageOrganizations]: [organizations_d],
   [managePermissions]: [permissions_r],
+  [manageApi]: [organizations_d],
 }

@@ -7,4 +7,5 @@ export default {
   manageUsers: '/manageUsers',
   manageOrganizations: '/manageOrganizations',
   managePermissions: '/managePermissions',
+  manageApi: '/manageApi',
 }
