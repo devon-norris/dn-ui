@@ -9,4 +9,5 @@ export default {
   users_u: 'users_u',
   users_d: 'users_d',
   longLivedToken_c: 'longLivedToken_c',
+  permissions_r: 'permissions_r',
 }

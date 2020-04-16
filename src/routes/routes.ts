@@ -6,4 +6,5 @@ export default {
   userSettings: '/userSettings',
   manageUsers: '/manageUsers',
   manageOrganizations: '/manageOrganizations',
+  managePermissions: '/managePermissions',
 }
