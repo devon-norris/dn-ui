@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react'
 import Nav from '../components/Nav'
+import NotFound from '../components/NotFound'
 import { useMediaQuery } from 'react-responsive'
 import { withRouter } from 'react-router'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { useSelector, useDispatch, RootStateOrAny } from 'react-redux'
 import { authenticate } from '../store/auth'
 import config from '../config'
-
-// Import pages
-import Home from './Home'
-import Login from './Login'
-import NotFound from './NotFound'
-import Signup from './Signup'
+import routes, { Route as IRoute } from '../routes'
+import validatePermissions from '../utils/validatePermissions'
 
 const {
   media,
@@ -20,7 +17,10 @@ const {
 
 const Routes = ({ history, location, match }) => {
   const isMobile = useMediaQuery({ query: media.mobile })
-  const isAuthenticated = useSelector(({ auth: { isAuthenticated } }: RootStateOrAny) => isAuthenticated)
+  const reduxState = useSelector((state: RootStateOrAny) => state)
+  const {
+    auth: { isAuthenticated },
+  } = reduxState
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -40,15 +40,16 @@ const Routes = ({ history, location, match }) => {
         style={{ textAlign: 'center', marginTop: isMobile ? `${appMarginTop + headerHeight}px` : `${appMarginTop}px` }}
       >
         <Switch>
-          <Route exact path='/'>
-            <Home />
-          </Route>
-          <Route exact path='/login'>
-            {isAuthenticated ? <Redirect to='/' /> : <Login {...props} />}
-          </Route>
-          <Route exact path='/signup'>
-            {isAuthenticated ? <Redirect to='/' /> : <Signup {...props} />}
-          </Route>
+          {routes.map(({ path, permissions, component: Component, redirectOnAuth }: IRoute) => {
+            const hasRoutePermission = validatePermissions(reduxState, permissions)
+            return (
+              hasRoutePermission && (
+                <Route exact path={path}>
+                  {redirectOnAuth && isAuthenticated ? <Redirect to='/' /> : <Component {...props} />}
+                </Route>
+              )
+            )
+          })}
           <Route>
             <NotFound />
           </Route>

@@ -49,6 +49,6 @@ cool app color --> #282c34
 
 TODO:
 
-create user validation
-password popover
-permission based routing
+add get users route
+add users table
+integrate routePermissions into Nav

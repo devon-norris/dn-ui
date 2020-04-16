@@ -7,12 +7,13 @@ import {
   UserOutlined,
   LoginOutlined,
   LogoutOutlined,
+  SettingOutlined,
 } from '@ant-design/icons'
 import config from '../../config'
 import colors from '../../colors'
 const { headerHeight, siderHeight, siderOffset, menuIconPadding } = config.nav
 const { Header, Sider } = Layout
-const { SubMenu } = Menu
+const { SubMenu, Item } = Menu
 
 export interface NavProps {
   isMobile: boolean
@@ -20,6 +21,7 @@ export interface NavProps {
   isAuthenticated: boolean
   router: any
   logout: Function
+  userName: string
 }
 
 const menuIconStyle = {
@@ -29,7 +31,7 @@ const menuIconStyle = {
 }
 const navBackgroundColor = colors.darkGray
 
-const Nav = ({ isMobile, children, isAuthenticated, router, logout }: NavProps) => {
+const Nav = ({ isMobile, children, isAuthenticated, router, logout, userName }: NavProps) => {
   const [collapsed, setCollapsed] = useState(true)
 
   const handleMenuFold = (): void => setCollapsed(!collapsed)
@@ -89,35 +91,35 @@ const Nav = ({ isMobile, children, isAuthenticated, router, logout }: NavProps) 
               onSelect={handleOnSelect}
               selectedKeys={[router.location.pathname]}
             >
-              <Menu.Item key='/'>
+              <Item key='/'>
                 <HomeOutlined />
                 <span>Home</span>
-              </Menu.Item>
+              </Item>
               {isAuthenticated ? (
                 <SubMenu
                   title={
                     <span>
                       <UserOutlined />
-                      <span>User</span>
+                      <span>{userName}</span>
                     </span>
-                  } // TODO: REPLACE
+                  }
                 >
-                  <Menu.Item key='/logout'>
-                    <LogoutOutlined />
-                    Logout
-                  </Menu.Item>
+                  <Item key='/userSettings'>
+                    <SettingOutlined />
+                    <span>Settings</span>
+                  </Item>
                 </SubMenu>
               ) : (
-                <Menu.Item key='/login'>
+                <Item key='/login'>
                   <LoginOutlined />
-                  Login
-                </Menu.Item>
+                  <span>Login</span>
+                </Item>
               )}
               {isAuthenticated && (
-                <Menu.Item key='/logout'>
+                <Item key='/logout'>
                   <LogoutOutlined />
                   <span>Logout</span>
-                </Menu.Item>
+                </Item>
               )}
             </Menu>
           </Sider>
@@ -135,6 +137,7 @@ const defaultProps: NavProps = {
   isAuthenticated: false,
   router: {},
   logout: () => {},
+  userName: '',
 }
 
 Nav.defaultProps = defaultProps
