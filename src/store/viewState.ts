@@ -5,6 +5,7 @@ export const viewKeys = {
   login: 'login',
   getOrgs: 'getOrgs',
   createUser: 'createUser',
+  getUsers: 'getUsers',
 }
 
 export interface ViewState {

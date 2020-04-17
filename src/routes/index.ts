@@ -5,8 +5,9 @@ import routePermissions from './routePermissions'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Signup from '../pages/Signup'
+import ManageUsers from '../pages/ManageUsers'
 
-const { home, login, signup } = routes
+const { home, login, signup, manageUsers } = routes
 
 export interface Route {
   path: string
@@ -33,6 +34,12 @@ const appRoutes: Route[] = [
     permissions: routePermissions[signup],
     component: Signup,
     redirectOnAuth: true,
+  },
+  {
+    path: manageUsers,
+    permissions: routePermissions[manageUsers],
+    component: ManageUsers,
+    redirectOnAuth: false,
   },
 ]
 

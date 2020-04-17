@@ -4,7 +4,6 @@ import { SyncOutlined } from '@ant-design/icons'
 
 interface TableExtraProps {
   data: any[]
-  dataKey: string
   placeholder: string
   syncAction: Function
   setData: Function
@@ -13,33 +12,40 @@ interface TableExtraProps {
 const filterSearch = (data: any[], query: string): any[] =>
   data.filter(obj => Object.values(obj).join('').toLowerCase().includes(query.toLowerCase()))
 
-const TableExtra = ({ data, dataKey, syncAction, setData, placeholder }: TableExtraProps) => {
+const TableExtra = ({ data, syncAction, setData, placeholder }: TableExtraProps) => {
   const [query, setQuery] = useState('')
 
-  const addKeyToData = (data: any[]) => data.map((obj: any) => ({ ...obj, key: obj[dataKey] }))
   const handleSyncClick = () => {
     setQuery('')
     syncAction()
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div
+      style={{
+        display: 'flex',
+        width: '35%',
+        float: 'right',
+        marginBottom: '24px',
+        position: 'relative',
+        zIndex: 99,
+      }}
+    >
       <Input
         inputType='search'
         value={query}
         placeholder={placeholder}
-        onSearch={(value: any): void => setData(filterSearch(addKeyToData(data), value))}
+        onSearch={(value: any): void => setData(filterSearch(data, value))}
         onChange={({ target: { value } }) => {
           setQuery(value)
-          return setData(filterSearch(addKeyToData(data), value))
+          return setData(filterSearch(data, value))
         }}
       />
       <Button
         type='primary'
         icon={<SyncOutlined />}
-        // TODO: determine sync button style
-        // Old Styles.syncButton -->  syncButton: { width: '40px', marginLeft: '10px' }
-        // style={styles.syncButton}
+        width='40px'
+        style={{ marginLeft: '10px' }}
         onClick={handleSyncClick}
       />
     </div>

@@ -7,8 +7,9 @@ import sortObject from '../utils/sortObject'
 import auth from './auth'
 import viewState from './viewState'
 import organizations from './organizations'
+import users from './users'
 
-const rootReducer = combineReducers(sortObject({ auth, viewState, organizations }))
+const rootReducer = combineReducers(sortObject({ auth, viewState, organizations, users }))
 const middleWare = applyMiddleware(thunk)
 
 export default () => createStore(rootReducer, composeWithDevTools(middleWare))
