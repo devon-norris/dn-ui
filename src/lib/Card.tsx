@@ -4,12 +4,13 @@ import colors from '../colors'
 import getComponentWidth from '../utils/getComponentWidth'
 import './overrides.css'
 
+const borderRadius = '4px'
+
 const Card = ({ cardType, isMobile, ...props }: any) => {
   const { style, headStyle, children } = props
   let cardStyle = {
-    margin: 'auto',
-    marginTop: '10%',
-    borderRadius: '5px',
+    margin: '3% auto auto auto',
+    borderRadius,
     width: getComponentWidth(isMobile),
   }
 
@@ -21,6 +22,7 @@ const Card = ({ cardType, isMobile, ...props }: any) => {
         color: '#fff',
         fontSize: '24px',
         textAlign: 'center',
+        borderRadius: `${borderRadius} ${borderRadius} 0 0`,
         ...headStyle,
       }}
       style={{ ...cardStyle, ...style }}

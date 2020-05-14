@@ -20,7 +20,7 @@ const Input = ({ fieldError, inputType, ...props }: any) => {
     ...props,
     onBlur: handleBlur,
     onFocus: handleFocus,
-    style: { borderRadius: '3px', ...props.style },
+    style: { borderRadius: '3px', ...props.style, textOverflow: 'ellipsis' },
   }
   if (Prefix) {
     inputProps.prefix = <Prefix style={{ color: prefixColor }} />

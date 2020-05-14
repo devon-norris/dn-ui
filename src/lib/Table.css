@@ -1,0 +1,11 @@
+.ant-table-thead > tr > th {
+  text-align: center;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 12px;
+}
+
+.action-column {
+  min-width: 180px;
+}

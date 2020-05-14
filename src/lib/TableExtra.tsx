@@ -7,12 +7,13 @@ interface TableExtraProps {
   placeholder: string
   syncAction: Function
   setData: Function
+  isMobile: boolean
 }
 
 const filterSearch = (data: any[], query: string): any[] =>
   data.filter(obj => Object.values(obj).join('').toLowerCase().includes(query.toLowerCase()))
 
-const TableExtra = ({ data, syncAction, setData, placeholder }: TableExtraProps) => {
+const TableExtra = ({ data, syncAction, setData, placeholder, isMobile }: TableExtraProps) => {
   const [query, setQuery] = useState('')
 
   const handleSyncClick = () => {
@@ -24,7 +25,7 @@ const TableExtra = ({ data, syncAction, setData, placeholder }: TableExtraProps)
     <div
       style={{
         display: 'flex',
-        width: '35%',
+        width: isMobile ? '100%' : '40%',
         float: 'right',
         marginBottom: '24px',
         position: 'relative',
@@ -51,5 +52,15 @@ const TableExtra = ({ data, syncAction, setData, placeholder }: TableExtraProps)
     </div>
   )
 }
+
+const defaultProps: TableExtraProps = {
+  data: [],
+  placeholder: '',
+  syncAction: () => {},
+  setData: () => {},
+  isMobile: true,
+}
+
+TableExtra.defaultProps = defaultProps
 
 export default TableExtra

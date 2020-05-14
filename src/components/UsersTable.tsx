@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Table } from '../lib'
+import tableTitles from '../utils/tableTitles'
 
 interface ManageUsersProps {
   users: any[]
@@ -15,10 +16,20 @@ const prettyRoles = {
   superadmin: 'Super Admin',
 }
 
-const userColumns = [{ key: 'name' }, { key: 'email' }, { key: 'role' }, { key: '_id', title: 'ID' }]
+const userColumns = [
+  { key: 'name', editOptions: true },
+  { key: 'email', editOptions: true },
+  { key: 'role' },
+  { key: '_id', title: 'ID' },
+]
 
 const transformUserData = users =>
-  users.map(user => ({ ...user, name: `${user.fName} ${user.lName}`, role: prettyRoles[user.role] || user.role }))
+  users.map(user => ({
+    ...user,
+    name: `${user.fName} ${user.lName}`,
+    role: prettyRoles[user.role] || user.role,
+    originalRole: user.role,
+  }))
 
 const ManageUsers = ({ users, getUsers, orgId, tableLoading }) => {
   useEffect(() => {
@@ -27,12 +38,13 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading }) => {
 
   return (
     <Table
-      title='Manage Users'
+      title={tableTitles.users}
       data={transformUserData(users)}
       getData={getUsers}
       columns={userColumns}
       tableLoading={tableLoading}
       searchPlaceHolder='Search Users'
+      editable
     />
   )
 }
