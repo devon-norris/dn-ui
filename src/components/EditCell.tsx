@@ -6,7 +6,6 @@ import { EditOptions } from '../lib/Table'
 interface EditCellProps {
   value: string
   onChange: Function
-  validator: Function
   dataId: string
   dataKey: string
   editOptions: EditOptions
@@ -14,23 +13,25 @@ interface EditCellProps {
   setResetId: Function
 }
 
-const borderColor = ({ isEqual, isValid, hover, focus }) => {
-  if (!focus && !isValid) return '1px solid red'
+const borderColor = ({ isEqual, isValid, hover }) => {
+  if (!isValid) return '1px solid red'
   if (isEqual) return `1px solid ${hover ? '#d9d9d9' : 'transparent'}`
   return `1px solid ${colors.primary}`
 }
 
+const defaultType = 'input'
+const defaultValidator = val => val.trim().length > 0
+
 const EditCell = ({
   value: propsValue,
   onChange,
-  validator,
   dataId,
   dataKey,
   editOptions,
   resetId,
   setResetId,
 }: EditCellProps) => {
-  const { type } = editOptions
+  const { type = defaultType, validator = defaultValidator } = editOptions
   const [value, setValue] = useState(propsValue)
   const [focus, setFocus] = useState(false)
   const [hover, setHover] = useState(false)
@@ -62,7 +63,7 @@ const EditCell = ({
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           style={{
-            border: borderColor({ isEqual, isValid, hover, focus }),
+            border: borderColor({ isEqual, isValid, hover }),
             cursor: focus ? 'inherit' : 'pointer',
             backgroundColor: 'inherit',
             marginLeft: '-6px',
@@ -78,11 +79,11 @@ const EditCell = ({
 const defaultProps: EditCellProps = {
   value: '',
   onChange: () => {},
-  validator: val => val.trim().length > 0,
   dataId: '',
   dataKey: '',
   editOptions: {
-    type: 'input',
+    type: defaultType,
+    validator: defaultValidator,
   },
   resetId: '',
   setResetId: () => {},

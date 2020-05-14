@@ -15,10 +15,10 @@ import './Table.css'
 
 export interface EditOptions {
   type?: string
-  usersTable?: boolean
+  validator?: Function
 }
 
-interface Column {
+export interface Column {
   key: string
   title?: string
   sorter?: boolean

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import { Table } from '../lib'
 import tableTitles from '../utils/tableTitles'
+import Table, { Column } from '../lib/Table'
+import validateEmail from '../utils/validateEmail'
 
 interface ManageUsersProps {
   users: any[]
@@ -16,9 +17,9 @@ const prettyRoles = {
   superadmin: 'Super Admin',
 }
 
-const userColumns = [
+const userColumns: Column[] = [
   { key: 'name', editOptions: true },
-  { key: 'email', editOptions: true },
+  { key: 'email', editOptions: { validator: validateEmail } },
   { key: 'role' },
   { key: '_id', title: 'ID' },
 ]

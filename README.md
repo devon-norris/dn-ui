@@ -44,12 +44,3 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## NOTES
-
-cool app color --> #282c34
-
-TODO:
-
-add get users route
-add users table
-create lib table
-create lib modal
