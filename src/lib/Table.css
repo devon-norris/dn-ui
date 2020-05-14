@@ -9,3 +9,7 @@
 .action-column {
   min-width: 180px;
 }
+
+.odd-rows {
+  background-color: #fafafa;
+}

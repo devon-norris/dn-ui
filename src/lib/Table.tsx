@@ -104,12 +104,13 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
     }
   }, [tableData]) // eslint-disable-line
 
-  const tableProps: any = {
+  const antdTableProps: any = {
     dataSource: tableData,
     columns: tableColumns,
     bordered: true,
     loading: tableLoading,
     scroll: { x: true },
+    rowClassName: (_, index: number): string => (index % 2 !== 0 ? 'odd-rows' : ''),
   }
 
   const cardExtraIconProps = {
@@ -131,7 +132,7 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
     )
 
     if (isEditing) {
-      tableProps.columns = [
+      antdTableProps.columns = [
         ...tableColumns.map(column => {
           if (column.editOptions) {
             column.render = (value, data) => {
@@ -168,8 +169,7 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
           className: 'action-column',
         },
       ]
-
-      tableProps.rowSelection = {
+      antdTableProps.rowSelection = {
         columnTitle: 'Select',
         onSelect: ({ key }) => setSelected(key === selected ? '' : key),
         selectedRowKeys: [selected],
@@ -178,6 +178,8 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
           return canEdit ? originalNode : null
         },
       }
+    } else {
+      antdTableProps.columns = tableColumns.map(column => ({ ...column, render: value => value }))
     }
   }
 
@@ -190,7 +192,7 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
         placeholder={searchPlaceHolder}
         isMobile={isMobile}
       />
-      <AntdTable {...tableProps} />
+      <AntdTable {...antdTableProps} />
     </Card>
   )
 }

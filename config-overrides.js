@@ -14,6 +14,7 @@ module.exports = override(
       '@layout-header-background': colors.darkGray,
       '@menu-dark-submenu-bg': colors.evenDarkerGray,
       '@font-size-base': '16px',
+      '@table-row-hover-bg': '@table-selected-row-bg',
     },
   })
 )
