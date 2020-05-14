@@ -6,6 +6,7 @@ import { viewKeys, getViewState } from '../../store/viewState'
 const mapStateToProps = ({ users, auth: { user }, ...state }) => ({
   users: users.data,
   orgId: user.orgId,
+  ownRole: user.role,
   tableLoading: getViewState(viewKeys.getUsers, state).loading,
 })
 

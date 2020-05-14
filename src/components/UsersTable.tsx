@@ -2,25 +2,35 @@ import React, { useEffect } from 'react'
 import tableTitles from '../utils/tableTitles'
 import Table, { Column } from '../lib/Table'
 import validateEmail from '../utils/validateEmail'
+import roles from '../utils/roles'
+import canModifyUser from '../utils/canModifyUser'
 
 interface ManageUsersProps {
   users: any[]
   getUsers: Function
   orgId: string
   tableLoading: boolean
+  ownRole: string
 }
 
 const prettyRoles = {
-  user: 'User',
-  admin: 'Admin',
-  orgadmin: 'Organization Admin',
-  superadmin: 'Super Admin',
+  [roles.user]: 'User',
+  [roles.admin]: 'Admin',
+  [roles.orgadmin]: 'Organization Admin',
+  [roles.superadmin]: 'Super Admin',
 }
+
+const userRoleOptions = [
+  { key: roles.user, title: prettyRoles[roles.user] },
+  { key: roles.admin, title: prettyRoles[roles.admin] },
+  { key: roles.orgadmin, title: prettyRoles[roles.orgadmin] },
+  { key: roles.superadmin, title: prettyRoles[roles.superadmin] },
+]
 
 const userColumns: Column[] = [
   { key: 'name', editOptions: true },
   { key: 'email', editOptions: { validator: validateEmail } },
-  { key: 'role' },
+  { key: 'role', editOptions: { type: 'select', selectOptions: userRoleOptions } },
   { key: '_id', title: 'ID' },
 ]
 
@@ -32,7 +42,22 @@ const transformUserData = users =>
     originalRole: user.role,
   }))
 
-const ManageUsers = ({ users, getUsers, orgId, tableLoading }) => {
+const transformUserColumns = (columns: Column[], ownRole: string) =>
+  columns.map(col => {
+    if (col.key === 'role') {
+      return {
+        ...col,
+        editOptions: {
+          // @ts-ignore
+          ...col.editOptions,
+          selectOptions: col.editOptions.selectOptions.filter(({ key }) => canModifyUser(ownRole, key, true)),
+        },
+      }
+    }
+    return col
+  })
+
+const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole }: ManageUsersProps) => {
   useEffect(() => {
     getUsers(orgId)
   }, []) // eslint-disable-line
@@ -42,7 +67,7 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading }) => {
       title={tableTitles.users}
       data={transformUserData(users)}
       getData={getUsers}
-      columns={userColumns}
+      columns={transformUserColumns(userColumns, ownRole)}
       tableLoading={tableLoading}
       searchPlaceHolder='Search Users'
       editable
@@ -55,6 +80,7 @@ const defaultProps: ManageUsersProps = {
   getUsers: () => {},
   orgId: '',
   tableLoading: false,
+  ownRole: 'user',
 }
 
 ManageUsers.defaultProps = defaultProps

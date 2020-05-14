@@ -13,9 +13,15 @@ import { EditOutlined, ReadOutlined } from '@ant-design/icons'
 import tableTitles from '../utils/tableTitles'
 import './Table.css'
 
+export interface SelectOption {
+  key: string
+  title: string
+}
+
 export interface EditOptions {
   type?: string
   validator?: Function
+  selectOptions?: SelectOption[]
 }
 
 export interface Column {
@@ -212,6 +218,6 @@ Table.defaultProps = defaultProps
 export default Table
 
 // TODO:
-// Make selectable edit (roles)
 // Implement Save and Delete actions
 // Add "Add" button (popup a modal?)
+// move canEdit logic into ManageUsers component (through the transformData function)

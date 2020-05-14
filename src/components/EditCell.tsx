@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Input } from '../lib'
+import { Select } from 'antd'
 import colors from '../colors'
 import { EditOptions } from '../lib/Table'
+const { Option } = Select
 
 interface EditCellProps {
   value: string
@@ -13,7 +15,7 @@ interface EditCellProps {
   setResetId: Function
 }
 
-const borderColor = ({ isEqual, isValid, hover }) => {
+const inputBorderColor = ({ isEqual, isValid, hover }) => {
   if (!isValid) return '1px solid red'
   if (isEqual) return `1px solid ${hover ? '#d9d9d9' : 'transparent'}`
   return `1px solid ${colors.primary}`
@@ -31,11 +33,16 @@ const EditCell = ({
   resetId,
   setResetId,
 }: EditCellProps) => {
-  const { type = defaultType, validator = defaultValidator } = editOptions
+  const { type = defaultType, validator = defaultValidator, selectOptions = [] } = editOptions
+  const selectOptionKeyTitles = useMemo(() => {
+    const keys = {}
+    selectOptions.forEach(({ key, title }) => (keys[key] = title))
+    return keys
+  }, [selectOptions])
   const [value, setValue] = useState(propsValue)
   const [focus, setFocus] = useState(false)
   const [hover, setHover] = useState(false)
-  const isEqual = value === propsValue
+  const isEqual = value === propsValue || selectOptionKeyTitles[value] === propsValue
   const isValid = validator(value)
 
   useEffect(() => {
@@ -55,6 +62,20 @@ const EditCell = ({
   }, [resetId]) // eslint-disable-line
 
   switch (type) {
+    case 'select':
+      return (
+        <Select
+          value={value}
+          onChange={value => setValue(value)}
+          style={{ minWidth: '180px', border: isEqual ? 'inherit' : `1px solid ${colors.primary}` }}
+        >
+          {selectOptions.map(({ key, title }) => (
+            <Option key={key} value={key}>
+              {title}
+            </Option>
+          ))}
+        </Select>
+      )
     default:
       return (
         <Input
@@ -63,7 +84,7 @@ const EditCell = ({
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           style={{
-            border: borderColor({ isEqual, isValid, hover }),
+            border: inputBorderColor({ isEqual, isValid, hover }),
             cursor: focus ? 'inherit' : 'pointer',
             backgroundColor: 'inherit',
             marginLeft: '-6px',
@@ -84,6 +105,7 @@ const defaultProps: EditCellProps = {
   editOptions: {
     type: defaultType,
     validator: defaultValidator,
+    selectOptions: [],
   },
   resetId: '',
   setResetId: () => {},
