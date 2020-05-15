@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import tableTitles from '../utils/tableTitles'
 import Table, { Column } from '../lib/Table'
 import validateEmail from '../utils/validateEmail'
 import roles from '../utils/roles'
@@ -34,12 +33,12 @@ const userColumns: Column[] = [
   { key: '_id', title: 'ID' },
 ]
 
-const transformUserData = users =>
+const transformUserData = (users: any[], ownRole) =>
   users.map(user => ({
     ...user,
     name: `${user.fName} ${user.lName}`,
     role: prettyRoles[user.role] || user.role,
-    originalRole: user.role,
+    canEdit: canModifyUser(ownRole, user.role),
   }))
 
 const transformUserColumns = (columns: Column[], ownRole: string) =>
@@ -64,8 +63,8 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole }: ManageUs
 
   return (
     <Table
-      title={tableTitles.users}
-      data={transformUserData(users)}
+      title='Manage Users'
+      data={transformUserData(users, ownRole)}
       getData={getUsers}
       columns={transformUserColumns(userColumns, ownRole)}
       tableLoading={tableLoading}

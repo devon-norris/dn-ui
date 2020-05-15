@@ -5,12 +5,9 @@ import _capitalize from 'lodash/capitalize'
 import addKeyToData from '../utils/addKeyToData'
 import EditCell from '../components/EditCell'
 import TableAction from './TableAction'
-import { useSelector, RootStateOrAny } from 'react-redux'
-import canModifyUser from '../utils/canModifyUser'
 import { useMediaQuery } from 'react-responsive'
 import config from '../config'
 import { EditOutlined, ReadOutlined } from '@ant-design/icons'
-import tableTitles from '../utils/tableTitles'
 import './Table.css'
 
 export interface SelectOption {
@@ -54,13 +51,11 @@ const createTableColumns = (columns: Column[]) =>
   }))
 
 const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading, editable }: TableProps) => {
-  const reduxState = useSelector((state: RootStateOrAny) => state)
   const isMobile = useMediaQuery({ query: config.media.mobile })
   const [tableData, setTableData] = useState([] as any[])
   const [tableColumns, setTableColumns] = useState([] as any[])
   const [modifiedData, setModifiedData] = useState({})
   const [resetId, setResetId] = useState('')
-  const [canEditIds, setCanEditIds] = useState({})
   const [selected, setSelected] = useState('')
   const [isEditing, setIsEditing] = useState(false)
 
@@ -99,17 +94,6 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
     setTableColumns(createTableColumns(columns))
   }, [columns])
 
-  useEffect(() => {
-    if (title === tableTitles.users) {
-      const ownRole = reduxState.auth.user.role
-      const canEdit = {}
-      tableData.forEach(({ originalRole, _id }) => {
-        canEdit[_id] = canModifyUser(ownRole, originalRole)
-      })
-      setCanEditIds(canEdit)
-    }
-  }, [tableData]) // eslint-disable-line
-
   const antdTableProps: any = {
     dataSource: tableData,
     columns: tableColumns,
@@ -142,8 +126,8 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
         ...tableColumns.map(column => {
           if (column.editOptions) {
             column.render = (value, data) => {
-              const canEditId = canEditIds[data._id] ?? true
-              return canEditId ? (
+              const canEdit = data.canEdit ?? true
+              return canEdit ? (
                 <EditCell
                   value={value}
                   dataId={data._id}
@@ -164,13 +148,7 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
           dataIndex: 'action',
           title: 'Action',
           render: (_, data) => (
-            <TableAction
-              data={data}
-              modifiedData={modifiedData}
-              setResetId={setResetId}
-              canEditIds={canEditIds}
-              selected={selected}
-            />
+            <TableAction data={data} modifiedData={modifiedData} setResetId={setResetId} selected={selected} />
           ),
           className: 'action-column',
         },
@@ -180,7 +158,7 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
         onSelect: ({ key }) => setSelected(key === selected ? '' : key),
         selectedRowKeys: [selected],
         renderCell: (checked, record, index, originalNode) => {
-          const canEdit = canEditIds[record._id] ?? true
+          const canEdit = record.canEdit ?? true
           return canEdit ? originalNode : null
         },
       }
@@ -218,6 +196,6 @@ Table.defaultProps = defaultProps
 export default Table
 
 // TODO:
+// Implement sorting
 // Implement Save and Delete actions
 // Add "Add" button (popup a modal?)
-// move canEdit logic into ManageUsers component (through the transformData function)

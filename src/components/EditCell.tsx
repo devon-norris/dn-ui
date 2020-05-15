@@ -67,7 +67,7 @@ const EditCell = ({
         <Select
           value={value}
           onChange={value => setValue(value)}
-          style={{ minWidth: '180px', border: isEqual ? 'inherit' : `1px solid ${colors.primary}` }}
+          style={{ minWidth: '200px', border: isEqual ? 'inherit' : `1px solid ${colors.primary}` }}
         >
           {selectOptions.map(({ key, title }) => (
             <Option key={key} value={key}>

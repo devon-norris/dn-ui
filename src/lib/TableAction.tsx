@@ -6,13 +6,11 @@ interface TableActionProps {
   data: any
   modifiedData: any
   setResetId: Function
-  canEditIds: any
   selected: string
 }
 
-const TableAction = ({ data, modifiedData, setResetId, canEditIds, selected }: TableActionProps) => {
-  const { _id } = data
-  const canEdit = canEditIds[_id] ?? true
+const TableAction = ({ data, modifiedData, setResetId, selected }: TableActionProps) => {
+  const { _id, canEdit = true } = data
   const isSelected = selected === _id
   const [canSave, setCanSave] = useState(false)
   const [canReset, setCanReset] = useState(false)
@@ -57,7 +55,6 @@ const defaultProps: TableActionProps = {
   data: {},
   modifiedData: {},
   setResetId: id => id,
-  canEditIds: {},
   selected: '',
 }
 TableAction.defaultProps = defaultProps
