@@ -1,20 +1,40 @@
 import { ReduxAction } from '../types'
-import axios from '../utils/axios'
-import { viewKeys, setViewState } from './viewState'
+import { viewKeys } from './viewState'
+import action from './action'
+
+interface ModifyUserParams {
+  userId: string
+  orgId: string
+  data: any
+}
 
 const GET_USERS = 'GET_USERS'
 
-export const getUsers = (orgId: string) => async dispatch => {
-  try {
-    dispatch(setViewState(viewKeys.getUsers, { loading: true }))
-    const apiRoute = orgId ? `/users?orgId=${orgId}` : '/users'
-    const data = await axios.get(apiRoute)
-    dispatch({ type: GET_USERS, data })
-  } catch (err) {
-    console.error('Error fetching users', err)
-  } finally {
-    dispatch(setViewState(viewKeys.getUsers, { loading: false }))
-  }
+export const getUsers = (orgId: string, shouldLoad?: boolean) => async dispatch =>
+  action({
+    dispatch,
+    shouldLoad,
+    viewKey: viewKeys.getUsers,
+    type: GET_USERS,
+    errMsg: 'Error fetching users',
+    request: {
+      method: 'get',
+      url: orgId ? `/users?orgId=${orgId}` : '/users',
+    },
+  })
+
+export const modifyUser = ({ userId, orgId, data }: ModifyUserParams) => async dispatch => {
+  await action({
+    dispatch,
+    viewKey: viewKeys.modifyUser,
+    errMsg: 'Error modifying user',
+    request: {
+      method: 'put',
+      url: `/users/${userId}`,
+      data,
+    },
+  })
+  return dispatch(getUsers(orgId, false))
 }
 
 const initialState = {

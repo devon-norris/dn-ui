@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, Fragment } from 'react'
 import { Input } from '../lib'
 import { Select } from 'antd'
 import colors from '../colors'
@@ -33,7 +33,7 @@ const EditCell = ({
   resetId,
   setResetId,
 }: EditCellProps) => {
-  const { type = defaultType, validator = defaultValidator, selectOptions = [] } = editOptions
+  const { type = defaultType, validator = defaultValidator, selectOptions = [], validatorMsg } = editOptions
   const selectOptionKeyTitles = useMemo(() => {
     const keys = {}
     selectOptions.forEach(({ key, title }) => (keys[key] = title))
@@ -54,7 +54,7 @@ const EditCell = ({
   }, [propsValue])
 
   useEffect(() => {
-    if (resetId === 'all') setValue(propsValue)
+    if (resetId === 'fetching' || resetId === 'fetched') setValue(propsValue)
     if (resetId === dataId) {
       setValue(propsValue)
       setResetId('')
@@ -78,21 +78,24 @@ const EditCell = ({
       )
     default:
       return (
-        <Input
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          style={{
-            border: inputBorderColor({ isEqual, isValid, hover }),
-            cursor: focus ? 'inherit' : 'pointer',
-            backgroundColor: 'inherit',
-            marginLeft: '-6px',
-            padding: '3px 6px',
-          }}
-          value={value}
-          onChange={({ target: { value } }) => setValue(value)}
-        />
+        <Fragment>
+          <Input
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+            style={{
+              border: inputBorderColor({ isEqual, isValid, hover }),
+              cursor: focus ? 'inherit' : 'pointer',
+              backgroundColor: 'inherit',
+              marginLeft: '-6px',
+              padding: '3px 6px',
+            }}
+            value={value}
+            onChange={({ target: { value } }) => setValue(value)}
+          />
+          {!isValid && validatorMsg && <span style={{ fontSize: '12px', color: 'red' }}>{validatorMsg}</span>}
+        </Fragment>
       )
   }
 }

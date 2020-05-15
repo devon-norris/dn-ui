@@ -3,10 +3,12 @@ import Table, { Column } from '../lib/Table'
 import validateEmail from '../utils/validateEmail'
 import roles from '../utils/roles'
 import canModifyUser from '../utils/canModifyUser'
+import { viewKeys } from '../store/viewState'
 
 interface ManageUsersProps {
   users: any[]
   getUsers: Function
+  modifyUser: Function
   orgId: string
   tableLoading: boolean
   ownRole: string
@@ -27,8 +29,16 @@ const userRoleOptions = [
 ]
 
 const userColumns: Column[] = [
-  { key: 'name', editOptions: {}, sorter: 'alphabetical' },
-  { key: 'email', editOptions: { validator: validateEmail }, sorter: 'alphabetical' },
+  {
+    key: 'name',
+    editOptions: { validator: v => v.trim().split(' ').length > 1, validatorMsg: 'Enter at least 2 names' },
+    sorter: 'alphabetical',
+  },
+  {
+    key: 'email',
+    editOptions: { validator: validateEmail, validatorMsg: 'Enter a valid email' },
+    sorter: 'alphabetical',
+  },
   { key: 'role', editOptions: { type: 'select', selectOptions: userRoleOptions }, sorter: 'alphabetical' },
   { key: '_id', title: 'ID' },
 ]
@@ -55,7 +65,23 @@ const transformUserColumns = (columns: Column[], ownRole: string) =>
     return col
   })
 
-const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole }: ManageUsersProps) => {
+const transformModifyData = data => {
+  if (data.name) {
+    const splitName = data.name.split(' ')
+    const fName = splitName[0].trim()
+    splitName.shift()
+    const lName = splitName.join(' ').trim()
+    delete data.name
+    return {
+      ...data,
+      fName,
+      lName,
+    }
+  }
+  return data
+}
+
+const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser }: ManageUsersProps) => {
   useEffect(() => {
     getUsers(orgId)
   }, []) // eslint-disable-line
@@ -69,6 +95,12 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole }: ManageUs
       tableLoading={tableLoading}
       searchPlaceHolder='Search Users'
       editable
+      editActions={{
+        onSave: (userId, data) => modifyUser({ userId, orgId, data: transformModifyData(data) }),
+        onDelete: () => {},
+        saveViewKey: viewKeys.modifyUser,
+        deleteViewKey: viewKeys.deleteUser,
+      }}
     />
   )
 }
@@ -76,6 +108,7 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole }: ManageUs
 const defaultProps: ManageUsersProps = {
   users: [],
   getUsers: () => {},
+  modifyUser: () => {},
   orgId: '',
   tableLoading: false,
   ownRole: 'user',

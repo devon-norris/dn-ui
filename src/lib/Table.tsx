@@ -18,6 +18,7 @@ export interface SelectOption {
 export interface EditOptions {
   type?: string
   validator?: Function
+  validatorMsg?: string
   selectOptions?: SelectOption[]
 }
 
@@ -29,6 +30,13 @@ export interface Column {
   editOptions?: EditOptions
 }
 
+export interface EditActions {
+  onSave: Function
+  onDelete: Function
+  saveViewKey: string
+  deleteViewKey: string
+}
+
 interface TableProps {
   title: string
   searchPlaceHolder: string
@@ -37,6 +45,7 @@ interface TableProps {
   columns: Column[]
   tableLoading: boolean
   editable?: boolean
+  editActions?: EditActions
 }
 
 const tableSorter = ({ a, b, sorter, key }) => {
@@ -56,7 +65,16 @@ const createTableColumns = (columns: Column[]) =>
     ...rest,
   }))
 
-const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading, editable }: TableProps) => {
+const Table = ({
+  title,
+  searchPlaceHolder,
+  data,
+  getData,
+  columns,
+  tableLoading,
+  editable,
+  editActions,
+}: TableProps) => {
   const isMobile = useMediaQuery({ query: config.media.mobile })
   const [tableData, setTableData] = useState([] as any[])
   const [tableColumns, setTableColumns] = useState([] as any[])
@@ -66,7 +84,7 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
-    if (resetId && resetId !== 'all') {
+    if (resetId) {
       const newModifiedData = { ...modifiedData }
       delete newModifiedData[resetId]
       setModifiedData(newModifiedData)
@@ -74,9 +92,9 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
   }, [resetId]) // eslint-disable-line
 
   const handleFetchData = () => {
-    setResetId('all')
+    setResetId('fetching')
     setModifiedData({})
-    getData().finally(() => setResetId(''))
+    getData().finally(() => setResetId('fetched'))
   }
 
   const handleEditCell = ({ isEqual, isValid, value, id, key }) =>
@@ -154,7 +172,13 @@ const Table = ({ title, searchPlaceHolder, data, getData, columns, tableLoading,
           dataIndex: 'action',
           title: 'Action',
           render: (_, data) => (
-            <TableAction data={data} modifiedData={modifiedData} setResetId={setResetId} selected={selected} />
+            <TableAction
+              data={data}
+              modifiedData={modifiedData}
+              setResetId={setResetId}
+              selected={selected}
+              editActions={editActions}
+            />
           ),
           className: 'action-column',
         },
