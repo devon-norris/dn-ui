@@ -27,9 +27,9 @@ const userRoleOptions = [
 ]
 
 const userColumns: Column[] = [
-  { key: 'name', editOptions: true },
-  { key: 'email', editOptions: { validator: validateEmail } },
-  { key: 'role', editOptions: { type: 'select', selectOptions: userRoleOptions } },
+  { key: 'name', editOptions: {}, sorter: 'alphabetical' },
+  { key: 'email', editOptions: { validator: validateEmail }, sorter: 'alphabetical' },
+  { key: 'role', editOptions: { type: 'select', selectOptions: userRoleOptions }, sorter: 'alphabetical' },
   { key: '_id', title: 'ID' },
 ]
 
@@ -43,11 +43,10 @@ const transformUserData = (users: any[], ownRole) =>
 
 const transformUserColumns = (columns: Column[], ownRole: string) =>
   columns.map(col => {
-    if (col.key === 'role') {
+    if (col.key === 'role' && col.editOptions && col.editOptions.selectOptions) {
       return {
         ...col,
         editOptions: {
-          // @ts-ignore
           ...col.editOptions,
           selectOptions: col.editOptions.selectOptions.filter(({ key }) => canModifyUser(ownRole, key, true)),
         },

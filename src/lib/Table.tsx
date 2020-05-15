@@ -24,9 +24,9 @@ export interface EditOptions {
 export interface Column {
   key: string
   title?: string
-  sorter?: boolean
+  sorter?: 'alphabetical' | 'numerical'
   render?: Function
-  editOptions?: boolean | EditOptions
+  editOptions?: EditOptions
 }
 
 interface TableProps {
@@ -39,14 +39,20 @@ interface TableProps {
   editable?: boolean
 }
 
-const defaultRender = item => item
+const tableSorter = ({ a, b, sorter, key }) => {
+  if (sorter === 'alphabetical') {
+    return a[key].localeCompare(b[key])
+  }
+  return a[key] - b[key]
+}
 
 const createTableColumns = (columns: Column[]) =>
-  columns.map(({ key, title = _capitalize(key), sorter = false, render = defaultRender, ...rest }: Column) => ({
+  columns.map(({ key, title = _capitalize(key), sorter, ...rest }: Column) => ({
     dataIndex: key,
     title,
-    sorter,
-    render,
+    ...(sorter && {
+      sorter: (a, b) => tableSorter({ a, b, sorter, key }),
+    }),
     ...rest,
   }))
 
@@ -196,6 +202,5 @@ Table.defaultProps = defaultProps
 export default Table
 
 // TODO:
-// Implement sorting
 // Implement Save and Delete actions
 // Add "Add" button (popup a modal?)
