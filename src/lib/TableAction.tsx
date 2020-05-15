@@ -83,6 +83,7 @@ const TableAction = ({
             disabled={!canSave}
             loading={isSaving && saveLoading}
             onClick={() => {
+              if (!canSave) return
               setIsSaving(true)
               const modified = modifiedData[_id]
               const dataToModify = {}
@@ -94,7 +95,7 @@ const TableAction = ({
           >
             Save
           </Button>
-          <Button disabled={!canReset} onClick={() => canSave && setResetId(data._id)}>
+          <Button disabled={!canReset} onClick={() => canReset && setResetId(data._id)}>
             Reset
           </Button>
         </Fragment>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Card as AntdCard } from 'antd'
 import colors from '../colors'
 import getComponentWidth from '../utils/getComponentWidth'
-import './overrides.css'
+import './Card.css'
 
 const borderRadius = '4px'
 
