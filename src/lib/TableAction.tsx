@@ -10,6 +10,7 @@ interface TableActionProps {
   setResetId: Function
   selected: string
   editActions: EditActions
+  onDeleteCancel: Function
 }
 
 const TableAction = ({
@@ -17,6 +18,7 @@ const TableAction = ({
   modifiedData,
   setResetId,
   selected,
+  onDeleteCancel,
   editActions: { onSave, onDelete, saveViewKey, deleteViewKey },
 }: TableActionProps) => {
   const { _id, canEdit = true } = data
@@ -65,8 +67,9 @@ const TableAction = ({
           title='Are you sure?'
           onConfirm={() => {
             setIsDeleting(true)
-            return onDelete(_id)
+            return onDelete(_id).finally(() => setResetId(_id))
           }}
+          onCancel={() => onDeleteCancel()}
         >
           <Button type='primary' danger loading={isDeleting && deleteLoading}>
             Delete
@@ -81,13 +84,12 @@ const TableAction = ({
             loading={isSaving && saveLoading}
             onClick={() => {
               setIsSaving(true)
-              setResetId(_id)
               const modified = modifiedData[_id]
               const dataToModify = {}
               for (const key in modified) {
                 dataToModify[key] = modified[key].value
               }
-              return onSave(_id, dataToModify)
+              return onSave(_id, dataToModify).finally(() => setResetId(_id))
             }}
           >
             Save
@@ -112,6 +114,7 @@ const defaultProps: TableActionProps = {
     saveViewKey: '',
     deleteViewKey: '',
   },
+  onDeleteCancel: () => {},
 }
 TableAction.defaultProps = defaultProps
 

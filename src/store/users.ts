@@ -37,6 +37,19 @@ export const modifyUser = ({ userId, orgId, data }: ModifyUserParams) => async d
   return dispatch(getUsers(orgId, false))
 }
 
+export const deleteUser = (userId: string, orgId: string) => async dispatch => {
+  await action({
+    dispatch,
+    viewKey: viewKeys.deleteUser,
+    errMsg: 'Error deleting user',
+    request: {
+      method: 'delete',
+      url: `/users/${userId}`,
+    },
+  })
+  return dispatch(getUsers(orgId, false))
+}
+
 const initialState = {
   data: [],
 }

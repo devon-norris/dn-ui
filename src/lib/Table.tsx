@@ -178,6 +178,7 @@ const Table = ({
               setResetId={setResetId}
               selected={selected}
               editActions={editActions}
+              onDeleteCancel={() => setSelected('')}
             />
           ),
           className: 'action-column',
@@ -226,5 +227,4 @@ Table.defaultProps = defaultProps
 export default Table
 
 // TODO:
-// Implement Save and Delete actions
 // Add "Add" button (popup a modal?)

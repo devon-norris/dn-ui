@@ -9,6 +9,7 @@ interface ManageUsersProps {
   users: any[]
   getUsers: Function
   modifyUser: Function
+  deleteUser: Function
   orgId: string
   tableLoading: boolean
   ownRole: string
@@ -44,12 +45,14 @@ const userColumns: Column[] = [
 ]
 
 const transformUserData = (users: any[], ownRole) =>
-  users.map(user => ({
-    ...user,
-    name: `${user.fName} ${user.lName}`,
-    role: prettyRoles[user.role] || user.role,
-    canEdit: canModifyUser(ownRole, user.role),
-  }))
+  users
+    .sort((a, b) => a.fName.localeCompare(b.fName))
+    .map(user => ({
+      ...user,
+      name: `${user.fName} ${user.lName}`,
+      role: prettyRoles[user.role] || user.role,
+      canEdit: canModifyUser(ownRole, user.role),
+    }))
 
 const transformUserColumns = (columns: Column[], ownRole: string) =>
   columns.map(col => {
@@ -81,7 +84,7 @@ const transformModifyData = data => {
   return data
 }
 
-const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser }: ManageUsersProps) => {
+const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser, deleteUser }: ManageUsersProps) => {
   useEffect(() => {
     getUsers(orgId)
   }, []) // eslint-disable-line
@@ -97,7 +100,7 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser
       editable
       editActions={{
         onSave: (userId, data) => modifyUser({ userId, orgId, data: transformModifyData(data) }),
-        onDelete: () => {},
+        onDelete: userId => deleteUser(userId, orgId),
         saveViewKey: viewKeys.modifyUser,
         deleteViewKey: viewKeys.deleteUser,
       }}
@@ -109,6 +112,7 @@ const defaultProps: ManageUsersProps = {
   users: [],
   getUsers: () => {},
   modifyUser: () => {},
+  deleteUser: () => {},
   orgId: '',
   tableLoading: false,
   ownRole: 'user',

@@ -1,6 +1,6 @@
 import UsersTable from '../../components/UsersTable'
 import { connect } from 'react-redux'
-import { getUsers, modifyUser } from '../../store/users'
+import { getUsers, modifyUser, deleteUser } from '../../store/users'
 import { viewKeys, getViewState } from '../../store/viewState'
 
 const mapStateToProps = ({ users, auth: { user }, ...state }) => ({
@@ -10,6 +10,6 @@ const mapStateToProps = ({ users, auth: { user }, ...state }) => ({
   tableLoading: getViewState(viewKeys.getUsers, state).loading,
 })
 
-const mapDispatchToProps = { getUsers, modifyUser }
+const mapDispatchToProps = { getUsers, modifyUser, deleteUser }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsersTable)
