@@ -91,18 +91,25 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser
 
   return (
     <Table
+      canAdd
+      editable
       title='Manage Users'
       data={transformUserData(users, ownRole)}
       getData={getUsers}
       columns={transformUserColumns(userColumns, ownRole)}
       tableLoading={tableLoading}
       searchPlaceHolder='Search Users'
-      editable
       editActions={{
         onSave: (userId, data) => modifyUser({ userId, orgId, data: transformModifyData(data) }),
         onDelete: userId => deleteUser(userId, orgId),
         saveViewKey: viewKeys.modifyUser,
         deleteViewKey: viewKeys.deleteUser,
+      }}
+      addOptions={{
+        buttonText: 'Add User',
+        onSubmit: () => new Promise((res, rej) => setTimeout(() => rej(true), 2000)), // TODO: Add user action
+        isValid: true, // TODO: control from user form
+        body: () => <div>Add user form</div>, // TODO: create user form
       }}
     />
   )

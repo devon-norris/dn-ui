@@ -8,6 +8,7 @@ import TableAction from './TableAction'
 import { useMediaQuery } from 'react-responsive'
 import config from '../config'
 import { EditOutlined, ReadOutlined } from '@ant-design/icons'
+import { Modal } from '../lib'
 import './Table.css'
 
 export interface SelectOption {
@@ -46,6 +47,15 @@ interface TableProps {
   tableLoading: boolean
   editable?: boolean
   editActions?: EditActions
+  canAdd?: boolean
+  addOptions?: {
+    buttonText: string
+    onSubmit: Function
+    body: any
+    modalTitle?: string
+    isValid?: boolean
+    async?: boolean
+  }
 }
 
 const tableSorter = ({ a, b, sorter, key }) => {
@@ -74,6 +84,8 @@ const Table = ({
   tableLoading,
   editable,
   editActions,
+  canAdd,
+  addOptions,
 }: TableProps) => {
   const isMobile = useMediaQuery({ query: config.media.mobile })
   const [tableData, setTableData] = useState([] as any[])
@@ -82,6 +94,7 @@ const Table = ({
   const [resetId, setResetId] = useState('')
   const [selected, setSelected] = useState('')
   const [isEditing, setIsEditing] = useState(false)
+  const [toggleModal, setToggleModal] = useState(false)
 
   useEffect(() => {
     if (resetId) {
@@ -206,8 +219,19 @@ const Table = ({
         setData={data => setTableData(addKeyToData(data))}
         placeholder={searchPlaceHolder}
         isMobile={isMobile}
+        canAdd={canAdd}
+        addText={addOptions?.buttonText}
+        addClick={() => setToggleModal(!toggleModal)}
       />
       <AntdTable {...antdTableProps} />
+      <Modal
+        title={addOptions?.modalTitle ?? addOptions?.buttonText}
+        open={toggleModal}
+        isValid={addOptions?.isValid}
+        onSubmit={addOptions?.onSubmit}
+        async={addOptions?.async}
+        body={addOptions?.body}
+      />
     </Card>
   )
 }
@@ -220,11 +244,9 @@ const defaultProps: TableProps = {
   columns: [],
   tableLoading: false,
   editable: false,
+  canAdd: false,
 }
 
 Table.defaultProps = defaultProps
 
 export default Table
-
-// TODO:
-// Add "Add" button (popup a modal?)
