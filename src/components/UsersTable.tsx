@@ -1,15 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Table, { Column } from '../lib/Table'
 import validateEmail from '../utils/validateEmail'
 import roles from '../utils/roles'
 import canModifyUser from '../utils/canModifyUser'
 import { viewKeys } from '../store/viewState'
+import SimpleForm, { FormData } from '../lib/SimpleForm'
+import { useForm } from '../lib/Form'
+import { CopyOutlined } from '@ant-design/icons'
+import { notification } from 'antd'
+import copy from 'clipboard-copy'
+import generator from 'generate-password'
+import config from '../config'
 
 interface ManageUsersProps {
   users: any[]
   getUsers: Function
   modifyUser: Function
   deleteUser: Function
+  addUser: Function
   orgId: string
   tableLoading: boolean
   ownRole: string
@@ -84,10 +92,74 @@ const transformModifyData = data => {
   return data
 }
 
-const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser, deleteUser }: ManageUsersProps) => {
+const ManageUsers = ({
+  users,
+  getUsers,
+  orgId,
+  tableLoading,
+  ownRole,
+  modifyUser,
+  deleteUser,
+  addUser,
+}: ManageUsersProps) => {
+  const [tempPassword] = useState(
+    config.isDev
+      ? config.testPW
+      : generator.generate({
+          length: 10,
+          numbers: true,
+          uppercase: true,
+          lowercase: true,
+          symbols: true,
+          strict: true,
+        })
+  )
+
   useEffect(() => {
     getUsers(orgId)
   }, []) // eslint-disable-line
+  const [form] = useForm()
+
+  const addUserFormData: FormData[] = useMemo(
+    () => [
+      {
+        name: 'fName',
+        placeHolder: 'First Name',
+        message: 'Please enter a first name',
+      },
+      {
+        name: 'lName',
+        placeHolder: 'Last Name',
+        message: 'Please enter a last name',
+      },
+      {
+        name: 'email',
+        message: 'Please enter a valid email',
+        validationType: 'email',
+      },
+      {
+        name: 'role',
+        fieldType: 'select',
+        selectOptions: userRoleOptions.filter(({ key }) => canModifyUser(ownRole, key, true)),
+        initialValue: 'user',
+      },
+      {
+        name: 'password',
+        initialValue: tempPassword,
+        disabled: true,
+        suffix: () => (
+          <CopyOutlined
+            style={{ cursor: 'pointer', color: '#1890ff' }}
+            onClick={() => {
+              copy(tempPassword)
+              return notification.success({ message: 'Copied Password!' })
+            }}
+          />
+        ),
+      },
+    ],
+    [tempPassword, ownRole]
+  )
 
   return (
     <Table
@@ -95,7 +167,7 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser
       editable
       title='Manage Users'
       data={transformUserData(users, ownRole)}
-      getData={getUsers}
+      getData={() => getUsers(orgId)}
       columns={transformUserColumns(userColumns, ownRole)}
       tableLoading={tableLoading}
       searchPlaceHolder='Search Users'
@@ -107,9 +179,9 @@ const ManageUsers = ({ users, getUsers, orgId, tableLoading, ownRole, modifyUser
       }}
       addOptions={{
         buttonText: 'Add User',
-        onSubmit: () => new Promise((res, rej) => setTimeout(() => rej(true), 2000)), // TODO: Add user action
-        isValid: true, // TODO: control from user form
-        body: () => <div>Add user form</div>, // TODO: create user form
+        onSubmit: data => addUser({ ...data, orgId }),
+        body: () => <SimpleForm form={form} data={addUserFormData} />,
+        form,
       }}
     />
   )
@@ -120,6 +192,7 @@ const defaultProps: ManageUsersProps = {
   getUsers: () => {},
   modifyUser: () => {},
   deleteUser: () => {},
+  addUser: () => {},
   orgId: '',
   tableLoading: false,
   ownRole: 'user',

@@ -1,6 +1,7 @@
 import { ReduxAction } from '../types'
 import { viewKeys } from './viewState'
 import action from './action'
+import { createNewUser } from './auth'
 
 interface ModifyUserParams {
   userId: string
@@ -22,6 +23,11 @@ export const getUsers = (orgId: string, shouldLoad?: boolean) => async dispatch 
       url: orgId ? `/users?orgId=${orgId}` : '/users',
     },
   })
+
+export const addUser = data => async dispatch => {
+  await dispatch(createNewUser(data))
+  return dispatch(getUsers(data.orgId))
+}
 
 export const modifyUser = ({ userId, orgId, data }: ModifyUserParams) => async dispatch => {
   await action({

@@ -44,3 +44,6 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## NOTES
+
+Create notification system for api responses
+Finish other pages

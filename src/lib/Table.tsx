@@ -55,6 +55,7 @@ interface TableProps {
     modalTitle?: string
     isValid?: boolean
     async?: boolean
+    form?: any
   }
 }
 
@@ -231,6 +232,7 @@ const Table = ({
         onSubmit={addOptions?.onSubmit}
         async={addOptions?.async}
         body={addOptions?.body}
+        form={addOptions?.form}
       />
     </Card>
   )

@@ -1,4 +1,4 @@
-const { REACT_APP_API_URL = 'http://localhost:5000' } = process.env
+const { REACT_APP_API_URL = 'http://localhost:5000', NODE_ENV } = process.env
 
 interface Config {
   apiUrl: string
@@ -16,6 +16,8 @@ interface Config {
     width: string
     widthMobile: string
   }
+  isDev: boolean
+  testPW: string
 }
 
 const config: Config = {
@@ -34,6 +36,8 @@ const config: Config = {
     width: '375px',
     widthMobile: '90%',
   },
+  isDev: NODE_ENV === 'development',
+  testPW: 'TestUser12!',
 }
 
 export default config

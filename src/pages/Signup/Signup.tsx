@@ -131,15 +131,15 @@ const Signup = ({
                 })}
               </Select>
             </Item>
-            <Button
-              type='primary'
-              style={{ width: '100%' }}
-              onClick={() => handleFormSubmit(form, createNewUser)}
-              loading={buttonLoading}
-            >
-              Register
-            </Button>
           </Form>
+          <Button
+            type='primary'
+            style={{ width: '100%' }}
+            onClick={() => handleFormSubmit(form, createNewUser)}
+            loading={buttonLoading}
+          >
+            Register
+          </Button>
         </Card>
       </Row>
       <Row>

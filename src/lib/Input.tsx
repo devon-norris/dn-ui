@@ -4,7 +4,7 @@ import colors from '../colors'
 
 const Input = ({ fieldError, inputType, ...props }: any) => {
   const [focus, setFocus] = useState(false)
-  const { prefix: Prefix } = props
+  const { prefix: Prefix, suffix: Suffix } = props
   const prefixColor = !!focus && !fieldError ? colors.primary : 'inherit'
 
   const handleFocus = () => {
@@ -24,6 +24,9 @@ const Input = ({ fieldError, inputType, ...props }: any) => {
   }
   if (Prefix) {
     inputProps.prefix = <Prefix style={{ color: prefixColor }} />
+  }
+  if (Suffix) {
+    inputProps.suffix = <Suffix />
   }
 
   switch (inputType) {

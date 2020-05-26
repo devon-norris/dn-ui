@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Modal as AntdModal } from 'antd'
+import trimObjectValues from '../utils/trimObjectValues'
 
 const modalRoot = document.getElementById('modal-root')
 // TODO: Revisit portal and see why it causes causes modal to close and open onSubmit
@@ -26,17 +27,25 @@ interface ModalProps {
   async?: boolean
   body?: any
   okText?: string
+  form?: any
 }
 
-const Modal = ({ onSubmit, async, body: Body, okText, title, isValid, open }: ModalProps) => {
+const Modal = ({ onSubmit, async, body: Body, okText, title, isValid, open, form }: ModalProps) => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const resetModal = () => {
+    setVisible(false)
+    setLoading(false)
+    if (form) {
+      form.resetFields()
+    }
+  }
 
   useEffect(() => {
     setMounted(true)
-    return () => handleCancel()
-  }, [])
+    return () => resetModal()
+  }, []) // eslint-disable-line
 
   useEffect(() => {
     mounted && setVisible(true)
@@ -58,9 +67,27 @@ const Modal = ({ onSubmit, async, body: Body, okText, title, isValid, open }: Mo
     return setVisible(false)
   }
 
-  const handleCancel = () => {
-    setVisible(false)
-    setLoading(false)
+  const handleFormSubmit = async () => {
+    if (async) {
+      try {
+        setLoading(true)
+        const values = await form.validateFields()
+        await onSubmit(trimObjectValues(values))
+        console.log('Successfully submitted:', values)
+        return resetModal()
+      } catch (err) {
+        console.error(err)
+        setLoading(false)
+      }
+    } else {
+      try {
+        const values = await form.validateFields()
+        onSubmit(trimObjectValues(values))
+        return resetModal()
+      } catch (err) {
+        console.error(err.message)
+      }
+    }
   }
 
   return (
@@ -69,8 +96,8 @@ const Modal = ({ onSubmit, async, body: Body, okText, title, isValid, open }: Mo
       visible={visible}
       okText={okText}
       confirmLoading={loading}
-      onOk={handleSubmit}
-      onCancel={handleCancel}
+      onOk={form ? handleFormSubmit : handleSubmit}
+      onCancel={resetModal}
       destroyOnClose
       centered
     >

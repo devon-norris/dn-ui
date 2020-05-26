@@ -62,6 +62,7 @@ export const createNewUser = ({ fName, lName, email, password, orgId, role = 'us
   } catch (err) {
     console.error('Error creating user', err)
     dispatch(setViewState(viewKeys.createUser, { loading: false }))
+    throw err
   }
 }
 
