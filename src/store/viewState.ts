@@ -8,6 +8,8 @@ export const viewKeys = {
   getUsers: 'getUsers',
   modifyUser: 'modifyUser',
   deleteUser: 'deleteUser',
+  modifySelf: 'modifySelf',
+  modifySelfPassword: 'modifySelfPassword',
 }
 
 export interface ViewState {

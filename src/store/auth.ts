@@ -66,6 +66,20 @@ export const createNewUser = ({ fName, lName, email, password, orgId, role = 'us
   }
 }
 
+export const modifySelf = ({ userId, data }) => async dispatch => {
+  const viewKey = data.password ? viewKeys.modifySelfPassword : viewKeys.modifySelf
+  try {
+    dispatch(setViewState(viewKey, { loading: true }))
+    await axios.put(`/users/${userId}`, data)
+    await dispatch(authenticate())
+  } catch (err) {
+    console.error(err)
+    throw err
+  } finally {
+    dispatch(setViewState(viewKey, { loading: false }))
+  }
+}
+
 const initialState: AuthState = {
   isAuthenticated: false,
   user: {

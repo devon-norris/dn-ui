@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Form as AntdForm, Select } from 'antd'
 import { Input, Form } from './'
 import _capitalize from 'lodash/capitalize'
@@ -19,6 +19,7 @@ export interface FormData {
   prefix?: any
   suffix?: any
   disabled?: boolean
+  fieldsAreEqual?: Function
   // https://github.com/yiminghe/async-validator
   validationType?:
     | 'string'
@@ -62,11 +63,28 @@ interface ItemRules {
   whitespace: boolean
 }
 
-const SimpleForm = ({ data, form }) => {
+const SimpleForm = ({ data, form, fieldsAreEqual = v => v }) => {
   const [errors, setErrors] = useState({})
+  const [initialValues, setInitialValues] = useState({})
+
+  useEffect(() => {
+    const initialValues = {}
+    data.forEach(({ name, initialValue = '' }) => {
+      initialValues[name] = initialValue
+    })
+    setInitialValues(initialValues)
+  }, [data]) // eslint-disable-line
 
   return (
-    <Form name='form' form={form} fieldErrors={setErrors}>
+    <Form
+      name='form'
+      form={form}
+      fieldErrors={setErrors}
+      onValuesChange={(value, allValues) => {
+        const isEqual = Object.keys(initialValues).every(key => initialValues[key] === allValues[key])
+        fieldsAreEqual(isEqual)
+      }}
+    >
       {data.map(
         ({
           name,
@@ -118,7 +136,7 @@ const SimpleForm = ({ data, form }) => {
               )
             default:
               return (
-                <Item key={name} {...itemProps}>
+                <Item key={name} colon={false} {...itemProps}>
                   <Input {...inputProps} />
                 </Item>
               )
