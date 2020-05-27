@@ -7,8 +7,9 @@ import Login from '../pages/Login'
 import Signup from '../pages/Signup'
 import ManageUsers from '../pages/ManageUsers'
 import UserSettings from '../pages/UserSettings'
+import ManageAPI from '../pages/ManageAPI'
 
-const { home, login, signup, manageUsers, userSettings } = routes
+const { home, login, signup, manageUsers, userSettings, manageApi } = routes
 
 export interface Route {
   path: string
@@ -46,6 +47,12 @@ const appRoutes: Route[] = [
     path: userSettings,
     permissions: routePermissions[userSettings],
     component: UserSettings,
+    redirectOnAuth: false,
+  },
+  {
+    path: manageApi,
+    permissions: routePermissions[manageApi],
+    component: ManageAPI,
     redirectOnAuth: false,
   },
 ]
