@@ -13,6 +13,10 @@ export const viewKeys = {
   createOrg: 'createOrg',
   modifyOrg: 'modifyOrg',
   deleteOrg: 'deleteOrg',
+  getPerms: 'getPerms',
+  createPerm: 'createPerm',
+  modifyPerm: 'modifyPerm',
+  deletePerm: 'deletePerm',
 }
 
 export interface ViewState {

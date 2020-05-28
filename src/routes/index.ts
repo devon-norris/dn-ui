@@ -9,8 +9,9 @@ import ManageUsers from '../pages/ManageUsers'
 import UserSettings from '../pages/UserSettings'
 import ManageAPI from '../pages/ManageAPI'
 import ManageOrganizations from '../pages/ManageOrganizations'
+import ManagePermissions from '../pages/ManagePermissions'
 
-const { home, login, signup, manageUsers, userSettings, manageApi, manageOrganizations } = routes
+const { home, login, signup, manageUsers, userSettings, manageApi, manageOrganizations, managePermissions } = routes
 
 export interface Route {
   path: string
@@ -60,6 +61,12 @@ const appRoutes: Route[] = [
     path: manageOrganizations,
     permissions: routePermissions[manageOrganizations],
     component: ManageOrganizations,
+    redirectOnAuth: false,
+  },
+  {
+    path: managePermissions,
+    permissions: routePermissions[managePermissions],
+    component: ManagePermissions,
     redirectOnAuth: false,
   },
 ]

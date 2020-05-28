@@ -18,6 +18,7 @@ export interface SelectOption {
 
 export interface EditOptions {
   type?: string
+  selectMultiple?: boolean
   validator?: Function
   validatorMsg?: string
   selectOptions?: SelectOption[]
@@ -216,7 +217,10 @@ const Table = ({
         },
       }
     } else {
-      antdTableProps.columns = tableColumns.map(column => ({ ...column, render: value => value }))
+      antdTableProps.columns = tableColumns.map(column => ({
+        ...column,
+        render: column.render ? column.render : value => value,
+      }))
     }
   }
 

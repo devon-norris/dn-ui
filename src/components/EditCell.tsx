@@ -3,6 +3,7 @@ import { Input } from '../lib'
 import { Select } from 'antd'
 import colors from '../colors'
 import { EditOptions } from '../lib/Table'
+import _isArray from 'lodash/isArray'
 const { Option } = Select
 
 interface EditCellProps {
@@ -22,7 +23,7 @@ const inputBorderColor = ({ isEqual, isValid, hover }) => {
 }
 
 const defaultType = 'input'
-const defaultValidator = val => val.trim().length > 0
+const defaultValidator = val => (_isArray(val) ? val.length > 0 : val.trim().length > 0)
 
 const EditCell = ({
   value: propsValue,
@@ -33,7 +34,13 @@ const EditCell = ({
   resetId,
   setResetId,
 }: EditCellProps) => {
-  const { type = defaultType, validator = defaultValidator, selectOptions = [], validatorMsg } = editOptions
+  const {
+    type = defaultType,
+    validator = defaultValidator,
+    selectOptions = [],
+    validatorMsg,
+    selectMultiple = false,
+  } = editOptions
   const selectOptionKeyTitles = useMemo(() => {
     const keys = {}
     selectOptions.forEach(({ key, title }) => (keys[key] = title))
@@ -62,13 +69,16 @@ const EditCell = ({
   }, [resetId]) // eslint-disable-line
 
   switch (type) {
-    case 'select':
+    case 'select': {
+      const selectProps: any = {
+        value,
+        onChange: value => setValue(value),
+        style: { minWidth: '200px', border: isEqual ? 'inherit' : `1px solid ${colors.primary}` },
+      }
+      if (selectMultiple) selectProps.mode = 'multiple'
+
       return (
-        <Select
-          value={value}
-          onChange={value => setValue(value)}
-          style={{ minWidth: '200px', border: isEqual ? 'inherit' : `1px solid ${colors.primary}` }}
-        >
+        <Select {...selectProps}>
           {selectOptions.map(({ key, title }) => (
             <Option key={key} value={key}>
               {title}
@@ -76,6 +86,7 @@ const EditCell = ({
           ))}
         </Select>
       )
+    }
     default:
       return (
         <Fragment>

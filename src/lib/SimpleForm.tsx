@@ -12,8 +12,9 @@ export interface FormData {
   inputType?: 'default' | 'password' | 'search'
   fieldType?: 'input' | 'select'
   selectOptions?: any[]
+  selectMultiple?: boolean
   autoComplete?: string
-  initialValue?: string
+  initialValue?: string | string[]
   required?: boolean
   message?: string
   prefix?: any
@@ -41,7 +42,7 @@ export interface FormData {
 
 interface ItemProps {
   name: string
-  initialValue: string
+  initialValue: string | string[]
   rules: any
   label?: string
 }
@@ -95,6 +96,7 @@ const SimpleForm = ({ data, form, fieldsAreEqual = v => v }) => {
           inputType = 'default',
           fieldType = 'input',
           selectOptions = [],
+          selectMultiple = false,
           placeHolder = _capitalize(name),
           prefix,
           suffix,
@@ -122,10 +124,12 @@ const SimpleForm = ({ data, form, fieldsAreEqual = v => v }) => {
           }
 
           switch (fieldType) {
-            case 'select':
+            case 'select': {
+              const selectProps: any = {}
+              if (selectMultiple) selectProps.mode = 'multiple'
               return (
                 <Item key={name} {...itemProps}>
-                  <Select>
+                  <Select {...selectProps}>
                     {selectOptions.map(({ key, title }) => (
                       <Option key={key} value={key}>
                         {title}
@@ -134,6 +138,7 @@ const SimpleForm = ({ data, form, fieldsAreEqual = v => v }) => {
                   </Select>
                 </Item>
               )
+            }
             default:
               return (
                 <Item key={name} colon={false} {...itemProps}>
