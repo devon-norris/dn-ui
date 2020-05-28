@@ -43,6 +43,7 @@ interface TableProps {
   searchPlaceHolder: string
   data: any[]
   getData: Function
+  setSelected: Function
   columns: Column[]
   tableLoading: boolean
   editable?: boolean
@@ -81,6 +82,7 @@ const Table = ({
   searchPlaceHolder,
   data,
   getData,
+  setSelected: propsSetSelected,
   columns,
   tableLoading,
   editable,
@@ -131,6 +133,11 @@ const Table = ({
   useEffect(() => {
     setTableColumns(createTableColumns(columns))
   }, [columns])
+
+  const handleSetSelected = value => {
+    propsSetSelected(value)
+    setSelected(value)
+  }
 
   const antdTableProps: any = {
     dataSource: tableData,
@@ -192,7 +199,8 @@ const Table = ({
               setResetId={setResetId}
               selected={selected}
               editActions={editActions}
-              onDeleteCancel={() => setSelected('')}
+              onDeleteCancel={() => handleSetSelected('')}
+              onDelete={() => handleSetSelected('')}
             />
           ),
           className: 'action-column',
@@ -200,7 +208,7 @@ const Table = ({
       ]
       antdTableProps.rowSelection = {
         columnTitle: 'Select',
-        onSelect: ({ key }) => setSelected(key === selected ? '' : key),
+        onSelect: ({ key }) => handleSetSelected(key === selected ? '' : key),
         selectedRowKeys: [selected],
         renderCell: (checked, record, index, originalNode) => {
           const canEdit = record.canEdit ?? true
@@ -243,6 +251,7 @@ const defaultProps: TableProps = {
   searchPlaceHolder: 'Search',
   data: [],
   getData: () => {},
+  setSelected: val => val,
   columns: [],
   tableLoading: false,
   editable: false,

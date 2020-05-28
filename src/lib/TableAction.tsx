@@ -11,6 +11,7 @@ interface TableActionProps {
   selected: string
   editActions: EditActions
   onDeleteCancel: Function
+  onDelete: Function
 }
 
 const TableAction = ({
@@ -19,6 +20,7 @@ const TableAction = ({
   setResetId,
   selected,
   onDeleteCancel,
+  onDelete: propsOnDelete,
   editActions: { onSave, onDelete, saveViewKey, deleteViewKey },
 }: TableActionProps) => {
   const { _id, canEdit = true } = data
@@ -67,7 +69,10 @@ const TableAction = ({
           title='Are you sure?'
           onConfirm={() => {
             setIsDeleting(true)
-            return onDelete(_id).finally(() => setResetId(_id))
+            return onDelete(_id).finally(() => {
+              propsOnDelete()
+              setResetId(_id)
+            })
           }}
           onCancel={() => onDeleteCancel()}
         >
@@ -116,6 +121,7 @@ const defaultProps: TableActionProps = {
     deleteViewKey: '',
   },
   onDeleteCancel: () => {},
+  onDelete: () => {},
 }
 TableAction.defaultProps = defaultProps
 

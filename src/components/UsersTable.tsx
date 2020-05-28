@@ -21,6 +21,7 @@ interface ManageUsersProps {
   orgId: string
   tableLoading: boolean
   ownRole: string
+  title?: string
 }
 
 const prettyRoles = {
@@ -101,6 +102,7 @@ const ManageUsers = ({
   modifyUser,
   deleteUser,
   addUser,
+  title,
 }: ManageUsersProps) => {
   const [tempPassword] = useState(
     config.isDev
@@ -165,7 +167,7 @@ const ManageUsers = ({
     <Table
       canAdd
       editable
-      title='Manage Users'
+      title={title}
       data={transformUserData(users, ownRole)}
       getData={() => getUsers(orgId)}
       columns={transformUserColumns(userColumns, ownRole)}
@@ -196,6 +198,7 @@ const defaultProps: ManageUsersProps = {
   orgId: '',
   tableLoading: false,
   ownRole: 'user',
+  title: 'Manage Users',
 }
 
 ManageUsers.defaultProps = defaultProps

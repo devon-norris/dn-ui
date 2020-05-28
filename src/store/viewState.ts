@@ -3,13 +3,16 @@ import _get from 'lodash/get'
 
 export const viewKeys = {
   login: 'login',
-  getOrgs: 'getOrgs',
-  createUser: 'createUser',
   getUsers: 'getUsers',
+  createUser: 'createUser',
   modifyUser: 'modifyUser',
   deleteUser: 'deleteUser',
   modifySelf: 'modifySelf',
   modifySelfPassword: 'modifySelfPassword',
+  getOrgs: 'getOrgs',
+  createOrg: 'createOrg',
+  modifyOrg: 'modifyOrg',
+  deleteOrg: 'deleteOrg',
 }
 
 export interface ViewState {
