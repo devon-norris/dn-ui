@@ -26,6 +26,8 @@
     "build": "react-app-rewired build",
     "build:staging": "env-cmd -f .env.staging react-app-rewired build",
     "build:production": "env-cmd -f .env.production react-app-rewired build",
+    "deploy:staging": "git checkout master && git pull && npm run build:staging && firebase deploy -P staging",
+    "deploy:production": "git checkout master && git pull && npm run build:production && firebase deploy -P default",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier \"**/*.+(js|jsx|ts|tsx|css|less|scss|json|yaml|yml|md|html)\" --write"
@@ -60,6 +62,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@types/cors": "^2.8.6",
     "@types/jest": "^24.9.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "^12.12.35",

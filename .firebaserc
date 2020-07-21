@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "southend-fd01a",
+    "staging": "southend-staging"
+  }
+}
