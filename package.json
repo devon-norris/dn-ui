@@ -6,7 +6,7 @@
     "@ant-design/icons": "^4.0.6",
     "antd": "^4.2.2",
     "await-to-js": "^2.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "clipboard-copy": "^3.1.0",
     "env-cmd": "^10.1.0",
     "generate-password": "^1.5.1",
